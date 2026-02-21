@@ -13,11 +13,11 @@ dependencies = [
   "python-dotenv>=1.0.1",
 ]
 authors = [{ name = "Gregory Fanous" }]
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 keywords = ["rag", "evaluation", "benchmark", "dashboard"]
 classifiers = [
   "Programming Language :: Python :: 3",
-  "License :: OSI Approved :: MIT License",
+  "License :: OSI Approved :: Apache Software License",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 

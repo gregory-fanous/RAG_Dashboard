@@ -4,6 +4,10 @@ Production-oriented RAG evaluation stack for retrieval quality, faithfulness, la
 
 **Maintainer:** Gregory Fanous
 
+## Dashboard Preview
+
+![RAG Dashboard Preview](.github/assets/rag-dashboard-preview.png)
+
 ## What this project includes
 
 - Python evaluator core (`src/rag_eval`)
@@ -25,9 +29,22 @@ python scripts/download_hf_datasets.py
 
 Dataset details and source links are documented in `docs/DATASETS.md`.
 
+## Optimization Findings
+
+- Method sweep metrics report: [docs/reports/method_sweep_metrics.md](docs/reports/method_sweep_metrics.md)
+
 ## Quickstart
 
 ### 1. Environment
+
+One-command setup:
+
+```bash
+./run_setup.sh
+source .venv/bin/activate
+```
+
+Manual setup:
 
 ```bash
 python -m venv .venv
