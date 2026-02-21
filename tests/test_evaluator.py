@@ -2,6 +2,7 @@ from pathlib import Path
 
 from rag_eval.evaluator import BenchmarkEvaluator
 from rag_eval.io import load_benchmark_config, load_dataset
+from rag_eval.models import BenchmarkReport
 from rag_eval.strategies import SyntheticRAGSystem
 
 
@@ -18,3 +19,9 @@ def test_benchmark_evaluator_runs_end_to_end():
     assert len(report.strategy_results) == len(config.strategies)
     assert all(result.aggregate.avg_quality_score >= 0.0 for result in report.strategy_results)
     assert all(result.aggregate.avg_latency_ms > 0.0 for result in report.strategy_results)
+
+
+def test_benchmark_report_run_id_is_unique():
+    first = BenchmarkReport.create("bench", "data.json", [])
+    second = BenchmarkReport.create("bench", "data.json", [])
+    assert first.run_id != second.run_id

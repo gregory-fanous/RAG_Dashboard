@@ -102,3 +102,21 @@ def test_workflow_service_accepts_zvec_backend_in_synthetic_mode(tmp_path, monke
 
     result = service.run_workflow(request, registry)
     assert result.request.retrieval_backend == "zvec"
+
+
+def test_list_runs_skips_malformed_artifacts(tmp_path, monkeypatch):
+    monkeypatch.setenv("RAG_ALLOW_SYNTHETIC_MODE", "true")
+    registry = DatasetRegistry()
+    service = WorkflowService(artifacts_dir=tmp_path)
+
+    request = WorkflowRunRequest(
+        dataset_id="public_eval_set",
+        execution_mode="synthetic",
+        mode="single",
+        sample_size=10,
+    )
+    service.run_workflow(request, registry)
+
+    (tmp_path / "broken.json").write_text("{not-valid-json", encoding="utf-8")
+    runs = service.list_runs(limit=20)
+    assert len(runs) >= 1

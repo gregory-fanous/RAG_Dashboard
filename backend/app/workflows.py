@@ -224,8 +224,14 @@ class WorkflowService:
         for path in run_files:
             if path.name == "latest.json":
                 continue
-            payload = json.loads(path.read_text(encoding="utf-8"))
-            summaries.append(WorkflowRunSummary.model_validate(payload["summary"]))
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+                summary = payload.get("summary")
+                if not isinstance(summary, dict):
+                    continue
+                summaries.append(WorkflowRunSummary.model_validate(summary))
+            except Exception:
+                continue
             if len(summaries) >= limit:
                 break
 

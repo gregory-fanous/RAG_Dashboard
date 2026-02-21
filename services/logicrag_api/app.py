@@ -4,6 +4,7 @@ import hashlib
 import json
 import threading
 import time
+from dataclasses import dataclass
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -21,7 +22,16 @@ app = FastAPI(
 _CACHE_DIR = Path("/tmp/logicrag_corpora")
 _CACHE_DIR.mkdir(parents=True, exist_ok=True)
 _LOCK = threading.Lock()
-_RAG_CACHE: dict[str, tuple[LogicRAG, dict[str, str]]] = {}
+
+
+@dataclass
+class _CachedRAG:
+    rag: LogicRAG
+    context_to_doc: dict[str, str]
+    lock: threading.Lock
+
+
+_RAG_CACHE: dict[str, _CachedRAG] = {}
 
 
 class CorpusDoc(BaseModel):
@@ -71,7 +81,7 @@ def _lookup_doc_id(context: str, context_to_doc: dict[str, str]) -> str | None:
     return None
 
 
-def _get_or_create_rag(request: LogicRAGAnswerRequest) -> tuple[LogicRAG, dict[str, str]]:
+def _get_or_create_rag(request: LogicRAGAnswerRequest) -> _CachedRAG:
     if not request.corpus:
         raise ValueError("Corpus cannot be empty for LogicRAG")
 
@@ -81,10 +91,7 @@ def _get_or_create_rag(request: LogicRAGAnswerRequest) -> tuple[LogicRAG, dict[s
     with _LOCK:
         cached = _RAG_CACHE.get(cache_key)
         if cached is not None:
-            rag, mapping = cached
-            rag.set_top_k(request.top_k)
-            rag.set_max_rounds(request.max_rounds)
-            return rag, mapping
+            return cached
 
         corpus_path = _CACHE_DIR / f"{hash_value}.json"
         if not corpus_path.exists():
@@ -92,15 +99,17 @@ def _get_or_create_rag(request: LogicRAGAnswerRequest) -> tuple[LogicRAG, dict[s
             corpus_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
         rag = LogicRAG(str(corpus_path), filter_repeats=request.filter_repeats)
-        rag.set_top_k(request.top_k)
-        rag.set_max_rounds(request.max_rounds)
-
         mapping = {
             _serialize_logicrag_doc(row.title, row.text): row.doc_id
             for row in request.corpus
         }
-        _RAG_CACHE[cache_key] = (rag, mapping)
-        return rag, mapping
+        entry = _CachedRAG(
+            rag=rag,
+            context_to_doc=mapping,
+            lock=threading.Lock(),
+        )
+        _RAG_CACHE[cache_key] = entry
+        return entry
 
 
 @app.get("/api/logicrag/health")
@@ -111,28 +120,31 @@ def health() -> dict[str, str]:
 @app.post("/api/logicrag/answer", response_model=LogicRAGAnswerResponse)
 def answer(request: LogicRAGAnswerRequest) -> LogicRAGAnswerResponse:
     try:
-        rag, mapping = _get_or_create_rag(request)
+        cache_entry = _get_or_create_rag(request)
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    prompt_before = int(logic_utils.TOKEN_COST.get("prompt", 0))
-    completion_before = int(logic_utils.TOKEN_COST.get("completion", 0))
+    with cache_entry.lock:
+        prompt_before = int(logic_utils.TOKEN_COST.get("prompt", 0))
+        completion_before = int(logic_utils.TOKEN_COST.get("completion", 0))
+        cache_entry.rag.set_top_k(request.top_k)
+        cache_entry.rag.set_max_rounds(request.max_rounds)
 
-    started = time.perf_counter()
-    try:
-        answer_text, contexts, rounds = rag.answer_question(request.question)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"LogicRAG inference failed: {exc}") from exc
-    latency_ms = (time.perf_counter() - started) * 1000.0
+        started = time.perf_counter()
+        try:
+            answer_text, contexts, rounds = cache_entry.rag.answer_question(request.question)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"LogicRAG inference failed: {exc}") from exc
+        latency_ms = (time.perf_counter() - started) * 1000.0
 
-    prompt_after = int(logic_utils.TOKEN_COST.get("prompt", 0))
-    completion_after = int(logic_utils.TOKEN_COST.get("completion", 0))
-    prompt_tokens = max(0, prompt_after - prompt_before)
-    completion_tokens = max(0, completion_after - completion_before)
+        prompt_after = int(logic_utils.TOKEN_COST.get("prompt", 0))
+        completion_after = int(logic_utils.TOKEN_COST.get("completion", 0))
+        prompt_tokens = max(0, prompt_after - prompt_before)
+        completion_tokens = max(0, completion_after - completion_before)
 
     retrieved_doc_ids: list[str] = []
     for context in contexts:
-        doc_id = _lookup_doc_id(context, mapping)
+        doc_id = _lookup_doc_id(context, cache_entry.context_to_doc)
         if doc_id and doc_id not in retrieved_doc_ids:
             retrieved_doc_ids.append(doc_id)
 

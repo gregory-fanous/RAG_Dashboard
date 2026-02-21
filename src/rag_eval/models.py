@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Any
+from uuid import uuid4
 
 
 @dataclass(frozen=True)
@@ -159,7 +160,8 @@ class BenchmarkReport:
         strategy_results: list[StrategyResult],
     ) -> "BenchmarkReport":
         ts = datetime.now(timezone.utc)
-        run_id = ts.strftime("%Y%m%dT%H%M%SZ")
+        # Include microseconds and entropy to avoid collisions for back-to-back runs.
+        run_id = f"{ts.strftime('%Y%m%dT%H%M%S%fZ')}-{uuid4().hex[:8]}"
         return cls(
             benchmark_name=benchmark_name,
             run_id=run_id,
