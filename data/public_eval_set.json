@@ -1,0 +1,139 @@
+{
+  "name": "public_rag_eval_set_v1",
+  "documents": [
+    {
+      "doc_id": "doc_eval_metrics",
+      "title": "Core Retrieval Metrics",
+      "text": "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.",
+      "tags": ["metrics", "retrieval"]
+    },
+    {
+      "doc_id": "doc_grounding",
+      "title": "Grounding and Faithfulness",
+      "text": "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.",
+      "tags": ["hallucination", "faithfulness"]
+    },
+    {
+      "doc_id": "doc_latency_budget",
+      "title": "Latency Governance",
+      "text": "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.",
+      "tags": ["latency", "sre"]
+    },
+    {
+      "doc_id": "doc_cost_controls",
+      "title": "Token Cost Controls",
+      "text": "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.",
+      "tags": ["cost", "governance"]
+    },
+    {
+      "doc_id": "doc_chunking_fixed",
+      "title": "Fixed Chunking",
+      "text": "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.",
+      "tags": ["chunking", "baseline"]
+    },
+    {
+      "doc_id": "doc_chunking_semantic",
+      "title": "Semantic Chunking",
+      "text": "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.",
+      "tags": ["chunking", "semantic"]
+    },
+    {
+      "doc_id": "doc_recursive",
+      "title": "Recursive Retrieval",
+      "text": "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.",
+      "tags": ["retrieval", "recursive"]
+    },
+    {
+      "doc_id": "doc_graph",
+      "title": "Graph Augmentation",
+      "text": "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.",
+      "tags": ["graph", "retrieval"]
+    },
+    {
+      "doc_id": "doc_hyde",
+      "title": "HyDE Retrieval",
+      "text": "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.",
+      "tags": ["hyde", "retrieval"]
+    },
+    {
+      "doc_id": "doc_self_rag",
+      "title": "Self-RAG",
+      "text": "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.",
+      "tags": ["self-rag", "generation"]
+    },
+    {
+      "doc_id": "doc_governance_gates",
+      "title": "Release Gates",
+      "text": "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.",
+      "tags": ["governance", "release"]
+    },
+    {
+      "doc_id": "doc_observability",
+      "title": "Observability and Drift",
+      "text": "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.",
+      "tags": ["observability", "operations"]
+    }
+  ],
+  "cases": [
+    {
+      "query_id": "q1",
+      "query": "Which retrieval metrics should be mandatory in RAG evaluation?",
+      "reference_answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear.",
+      "ground_truth_doc_ids": ["doc_eval_metrics"]
+    },
+    {
+      "query_id": "q2",
+      "query": "How can teams evaluate hallucination risk in generated answers?",
+      "reference_answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation.",
+      "ground_truth_doc_ids": ["doc_grounding"]
+    },
+    {
+      "query_id": "q3",
+      "query": "What should latency benchmarking include for RAG systems?",
+      "reference_answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay.",
+      "ground_truth_doc_ids": ["doc_latency_budget"]
+    },
+    {
+      "query_id": "q4",
+      "query": "How do you govern token spend in production RAG?",
+      "reference_answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment.",
+      "ground_truth_doc_ids": ["doc_cost_controls", "doc_governance_gates"]
+    },
+    {
+      "query_id": "q5",
+      "query": "Why compare fixed chunking and semantic chunking?",
+      "reference_answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity.",
+      "ground_truth_doc_ids": ["doc_chunking_fixed", "doc_chunking_semantic"]
+    },
+    {
+      "query_id": "q6",
+      "query": "When does recursive retrieval improve outcomes?",
+      "reference_answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions.",
+      "ground_truth_doc_ids": ["doc_recursive"]
+    },
+    {
+      "query_id": "q7",
+      "query": "What does graph augmentation add beyond vector search?",
+      "reference_answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding.",
+      "ground_truth_doc_ids": ["doc_graph"]
+    },
+    {
+      "query_id": "q8",
+      "query": "How does HyDE influence retrieval quality?",
+      "reference_answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries.",
+      "ground_truth_doc_ids": ["doc_hyde"]
+    },
+    {
+      "query_id": "q9",
+      "query": "What tradeoffs come with Self-RAG?",
+      "reference_answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage.",
+      "ground_truth_doc_ids": ["doc_self_rag"]
+    },
+    {
+      "query_id": "q10",
+      "query": "What governance gates should block a risky RAG release?",
+      "reference_answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards.",
+      "ground_truth_doc_ids": ["doc_governance_gates", "doc_observability"]
+    }
+  ]
+}

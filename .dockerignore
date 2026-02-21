@@ -1,0 +1,14 @@
+.git
+.gitignore
+.pytest_cache
+__pycache__
+*.pyc
+.DS_Store
+
+.env
+frontend/node_modules
+frontend/.next
+node_modules
+
+artifacts/workflows/*.json
+third_party

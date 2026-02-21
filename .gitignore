@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+.venv/
+.env
+third_party/
+
+# Generated evaluation outputs
+artifacts/workflows/
+artifacts/sweeps/
+artifacts/latest.json
+artifacts/latest.md
+artifacts/20*.json
+artifacts/20*.md
+
+# Third-party datasets are local-only (download via scripts/download_hf_datasets.py)
+data/*
+!data/README.md
+!data/public_eval_set.json

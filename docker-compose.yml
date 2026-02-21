@@ -1,0 +1,36 @@
+services:
+  logicrag:
+    build:
+      context: .
+      dockerfile: services/logicrag_api/Dockerfile
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - "8100:8100"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - .env
+    environment:
+      LOGICRAG_SERVICE_URL: http://logicrag:8100
+    depends_on:
+      - logicrag
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"

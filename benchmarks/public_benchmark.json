@@ -1,0 +1,73 @@
+{
+  "benchmark_name": "public_rag_stack_benchmark",
+  "dataset_path": "../data/public_eval_set.json",
+  "random_seed": 77,
+  "strategies": [
+    {
+      "name": "baseline_fixed",
+      "chunking_strategy": "fixed",
+      "retrieval_k": 5,
+      "recursive_retrieval": false,
+      "graph_augmentation": false,
+      "hyde": false,
+      "self_rag": false,
+      "prompt_token_price_per_1k": 0.003,
+      "completion_token_price_per_1k": 0.015
+    },
+    {
+      "name": "semantic_chunking",
+      "chunking_strategy": "semantic",
+      "retrieval_k": 5,
+      "recursive_retrieval": false,
+      "graph_augmentation": false,
+      "hyde": false,
+      "self_rag": false,
+      "prompt_token_price_per_1k": 0.003,
+      "completion_token_price_per_1k": 0.015
+    },
+    {
+      "name": "recursive_semantic",
+      "chunking_strategy": "semantic",
+      "retrieval_k": 6,
+      "recursive_retrieval": true,
+      "graph_augmentation": false,
+      "hyde": false,
+      "self_rag": false,
+      "prompt_token_price_per_1k": 0.003,
+      "completion_token_price_per_1k": 0.015
+    },
+    {
+      "name": "graph_recursive",
+      "chunking_strategy": "semantic",
+      "retrieval_k": 6,
+      "recursive_retrieval": true,
+      "graph_augmentation": true,
+      "hyde": false,
+      "self_rag": false,
+      "prompt_token_price_per_1k": 0.003,
+      "completion_token_price_per_1k": 0.015
+    },
+    {
+      "name": "hyde_recursive",
+      "chunking_strategy": "semantic",
+      "retrieval_k": 6,
+      "recursive_retrieval": true,
+      "graph_augmentation": false,
+      "hyde": true,
+      "self_rag": false,
+      "prompt_token_price_per_1k": 0.003,
+      "completion_token_price_per_1k": 0.015
+    },
+    {
+      "name": "self_rag_full_stack",
+      "chunking_strategy": "adaptive",
+      "retrieval_k": 7,
+      "recursive_retrieval": true,
+      "graph_augmentation": true,
+      "hyde": true,
+      "self_rag": true,
+      "prompt_token_price_per_1k": 0.003,
+      "completion_token_price_per_1k": 0.015
+    }
+  ]
+}

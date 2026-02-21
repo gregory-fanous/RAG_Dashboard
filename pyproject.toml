@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-eval-dashboard"
+version = "0.1.0"
+description = "Production-grade RAG benchmark and evaluation dashboard"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.52.0",
+  "python-dotenv>=1.0.1",
+]
+authors = [{ name = "Gregory Fanous" }]
+license = { text = "MIT" }
+keywords = ["rag", "evaluation", "benchmark", "dashboard"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.scripts]
+rag-eval = "rag_eval.cli:main"
+
+[project.optional-dependencies]
+zvec = ["zvec"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
