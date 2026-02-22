@@ -61,6 +61,13 @@ function metricValue(values: number[], fallback = 0): number {
   return values.reduce((acc, value) => acc + value, 0) / values.length;
 }
 
+function messageForError(error: unknown, fallback: string): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return fallback;
+}
+
 export default function DashboardApp() {
   const [datasets, setDatasets] = useState<DatasetSummary[]>([]);
   const [techniques, setTechniques] = useState<TechniqueCatalog | null>(null);
@@ -76,31 +83,63 @@ export default function DashboardApp() {
 
   useEffect(() => {
     async function bootstrap() {
-      try {
-        setLoading(true);
-        const [ds, tc, uc, history] = await Promise.all([
-          getDatasets(),
-          getTechniques(),
-          getUseCases(),
-          getWorkflowRuns(),
-        ]);
-        setDatasets(ds);
-        setTechniques(tc);
-        setUseCases(uc);
-        setRuns(history);
+      setLoading(true);
+      setError("");
+      const issues: string[] = [];
 
+      const [dsResult, techniquesResult, useCasesResult, runsResult] = await Promise.allSettled([
+        getDatasets(),
+        getTechniques(),
+        getUseCases(),
+        getWorkflowRuns(),
+      ]);
+
+      if (dsResult.status === "fulfilled") {
+        const ds = dsResult.value;
+        setDatasets(ds);
         const defaultDataset = ds[0]?.id ?? "";
         setForm((prev) => ({ ...prev, dataset_id: prev.dataset_id || defaultDataset }));
-
-        if (history.length > 0) {
-          const latest = await getWorkflowRun(history[0].run_id);
-          setActiveRun(latest);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load API resources");
-      } finally {
-        setLoading(false);
+      } else {
+        setDatasets([]);
+        issues.push(`Datasets: ${messageForError(dsResult.reason, "Failed to load datasets.")}`);
       }
+
+      if (techniquesResult.status === "fulfilled") {
+        setTechniques(techniquesResult.value);
+      } else {
+        setTechniques(null);
+        issues.push(
+          `Techniques: ${messageForError(techniquesResult.reason, "Failed to load technique catalog.")}`,
+        );
+      }
+
+      if (useCasesResult.status === "fulfilled") {
+        setUseCases(useCasesResult.value);
+      } else {
+        setUseCases([]);
+        issues.push(`Use cases: ${messageForError(useCasesResult.reason, "Failed to load use-case presets.")}`);
+      }
+
+      if (runsResult.status === "fulfilled") {
+        const history = runsResult.value;
+        setRuns(history);
+        if (history.length > 0) {
+          try {
+            const latest = await getWorkflowRun(history[0].run_id);
+            setActiveRun(latest);
+          } catch (error) {
+            issues.push(`Latest run: ${messageForError(error, "Failed to load latest run detail.")}`);
+          }
+        }
+      } else {
+        setRuns([]);
+        issues.push(`Workflow runs: ${messageForError(runsResult.reason, "Failed to load workflow history.")}`);
+      }
+
+      if (issues.length > 0) {
+        setError(issues.join(" "));
+      }
+      setLoading(false);
     }
 
     bootstrap();
@@ -300,13 +339,18 @@ export default function DashboardApp() {
               Dataset
               <select
                 value={form.dataset_id}
+                disabled={datasets.length === 0}
                 onChange={(event) => setForm((prev) => ({ ...prev, dataset_id: event.target.value }))}
               >
-                {datasets.map((dataset) => (
-                  <option value={dataset.id} key={dataset.id}>
-                    {dataset.name}
-                  </option>
-                ))}
+                {datasets.length === 0 ? (
+                  <option value="">No datasets available</option>
+                ) : (
+                  datasets.map((dataset) => (
+                    <option value={dataset.id} key={dataset.id}>
+                      {dataset.name}
+                    </option>
+                  ))
+                )}
               </select>
             </label>
 
@@ -523,7 +567,7 @@ export default function DashboardApp() {
             Include baseline strategy in comparison
           </label>
 
-          <button type="submit" disabled={running}>
+          <button type="submit" disabled={running || datasets.length === 0}>
             {running ? "Running workflow..." : "Run Evaluation"}
           </button>
         </form>
@@ -531,6 +575,7 @@ export default function DashboardApp() {
         <aside className="panel">
           <h2>Dataset Inventory</h2>
           <div className="dataset-list">
+            {datasets.length === 0 ? <p>No datasets found. Verify files under the `data/` directory.</p> : null}
             {datasets.map((dataset) => (
               <article className="dataset-card" key={dataset.id}>
                 <h3>{dataset.name}</h3>

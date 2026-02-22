@@ -17,6 +17,16 @@ def test_dataset_registry_lists_expected_sources():
     assert expected.issubset(ids)
 
 
+def test_dataset_registry_skips_partially_restored_dataset(tmp_path):
+    # Simulate a restored dataset directory missing required metadata files.
+    (tmp_path / "open_ragbench" / "pdf" / "arxiv").mkdir(parents=True)
+
+    registry = DatasetRegistry(data_root=tmp_path)
+    summaries = registry.list_datasets()
+
+    assert summaries == []
+
+
 def test_technique_catalog_includes_retrieval_backends():
     service = WorkflowService()
     catalog = service.technique_catalog()

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import json
+import logging
 import random
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,6 +14,8 @@ from .schemas import DatasetSummary
 ROOT = ensure_src_path()
 
 from rag_eval.models import Document, EvaluationCase, EvaluationDataset  # noqa: E402
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -177,6 +180,9 @@ class DatasetRegistry:
 
     def _discover_custom_package_records(self) -> dict[str, DatasetRecord]:
         discovered: dict[str, DatasetRecord] = {}
+        if not self.data_root.exists():
+            return discovered
+
         for directory in sorted(self.data_root.iterdir()):
             if not directory.is_dir():
                 continue
@@ -202,7 +208,19 @@ class DatasetRegistry:
         return discovered
 
     def list_datasets(self) -> list[DatasetSummary]:
-        return [self._summary(record) for record in self.records.values() if record.source_path.exists()]
+        summaries: list[DatasetSummary] = []
+        for record in self.records.values():
+            if not record.source_path.exists():
+                continue
+            try:
+                summaries.append(self._summary(record))
+            except Exception as exc:
+                logger.warning(
+                    "Skipping dataset '%s' because metadata could not be loaded: %s",
+                    record.dataset_id,
+                    exc,
+                )
+        return summaries
 
     def _summary(self, record: DatasetRecord) -> DatasetSummary:
         approx_docs = 0

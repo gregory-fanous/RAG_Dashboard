@@ -100,10 +100,20 @@ Frontend:
 ```bash
 cd frontend
 npm install
-NEXT_PUBLIC_API_BASE=http://127.0.0.1:8000 npm run dev
+npm run dev
 ```
 
 Open `http://127.0.0.1:3000`.
+
+Optional frontend API config:
+
+- `BACKEND_API_BASE` (preferred for Next.js proxy rewrites, default: `http://127.0.0.1:8000`)
+- `NEXT_PUBLIC_API_BASE` (browser-direct fetch override)
+
+## Workflow Builder
+
+![RAG Workflow Preview](.github/assets/workflow-builder.png)
+
 
 ## Docker
 

@@ -7,21 +7,42 @@ import {
   WorkflowRunSummary,
 } from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://127.0.0.1:8000";
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE ?? "").replace(/\/$/, "");
+const API_TARGET = API_BASE || "Next.js /api proxy";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
-    cache: "no-store",
-  });
+  const url = API_BASE ? `${API_BASE}${path}` : path;
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...(init?.headers ?? {}),
+      },
+      cache: "no-store",
+    });
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error(
+        `Unable to reach API via ${API_TARGET}. Start the backend and verify NEXT_PUBLIC_API_BASE or BACKEND_API_BASE.`,
+      );
+    }
+    throw error;
+  }
 
   if (!response.ok) {
-    const detail = await response.text();
-    throw new Error(detail || `Request failed: ${response.status}`);
+    const body = await response.text();
+    let detail = body;
+    try {
+      const parsed = JSON.parse(body) as { detail?: unknown };
+      if (typeof parsed.detail === "string" && parsed.detail.trim()) {
+        detail = parsed.detail;
+      }
+    } catch {
+      // Leave non-JSON bodies unchanged.
+    }
+    throw new Error(detail || `Request failed (${response.status})`);
   }
 
   return response.json() as Promise<T>;
