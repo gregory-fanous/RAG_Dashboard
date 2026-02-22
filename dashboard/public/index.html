@@ -5,17 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RAG Evaluation Dashboard</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Azeret+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --bg-0: #f5f7f2;
-      --bg-1: #dfe8c8;
-      --ink: #1a2917;
-      --ink-soft: #41583d;
-      --accent: #d95d39;
-      --accent-2: #20736f;
-      --card: #ffffff;
-      --line: #b9c5a7;
+      --bg-0: #02071b;
+      --bg-1: #061537;
+      --bg-2: #0a214a;
+      --ink: #dbecff;
+      --ink-soft: #8ca8d5;
+      --cyan: #4de8ff;
+      --mint: #71ffd8;
+      --violet: #a67dff;
+      --line: #1f3767;
+      --card: rgba(9, 20, 54, 0.66);
+      --card-strong: rgba(6, 15, 40, 0.84);
     }
 
     * {
@@ -24,69 +27,135 @@
 
     body {
       margin: 0;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Rajdhani', sans-serif;
       color: var(--ink);
-      background: radial-gradient(circle at 0% 0%, var(--bg-1) 0%, var(--bg-0) 48%),
-                  radial-gradient(circle at 100% 100%, #f0e3c3 0%, transparent 45%);
+      background:
+        radial-gradient(circle at 16% 0%, rgba(77, 232, 255, 0.2), transparent 40%),
+        radial-gradient(circle at 88% 12%, rgba(166, 125, 255, 0.16), transparent 38%),
+        linear-gradient(165deg, var(--bg-0) 0%, var(--bg-1) 46%, var(--bg-2) 100%);
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(77, 232, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(77, 232, 255, 0.06) 1px, transparent 1px);
+      background-size: 78px 78px;
+      mask-image: radial-gradient(circle at 50% 48%, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.35) 72%, transparent 100%);
+      z-index: -1;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% -20%, rgba(113, 255, 216, 0.15), transparent 56%);
+      z-index: -1;
     }
 
     .shell {
-      max-width: 1160px;
+      max-width: 1220px;
       margin: 0 auto;
       padding: 28px 20px 60px;
     }
 
     .hero {
-      background: linear-gradient(120deg, #233725 0%, #1f594f 48%, #93422a 100%);
-      color: #f9fdf4;
-      border-radius: 18px;
-      padding: 30px;
+      background:
+        radial-gradient(circle at 82% 8%, rgba(77, 232, 255, 0.2), transparent 28%),
+        linear-gradient(125deg, rgba(8, 17, 46, 0.94) 0%, rgba(8, 29, 72, 0.9) 52%, rgba(27, 20, 70, 0.92) 100%);
+      color: var(--ink);
+      border: 1px solid rgba(84, 237, 255, 0.45);
+      border-radius: 22px;
+      padding: 34px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 18px 40px rgba(26, 41, 23, 0.18);
+      box-shadow:
+        0 18px 40px rgba(4, 10, 28, 0.56),
+        0 0 0 1px rgba(77, 232, 255, 0.18) inset,
+        0 0 34px rgba(77, 232, 255, 0.24);
     }
 
     .hero::after {
       content: "";
       position: absolute;
-      right: -40px;
-      top: -40px;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid rgba(166, 125, 255, 0.25);
+      transform: scale(0.985);
+      pointer-events: none;
     }
 
     .label {
       display: inline-block;
-      letter-spacing: 0.1em;
-      font-size: 12px;
+      letter-spacing: 0.18em;
+      font-size: 11px;
       text-transform: uppercase;
-      margin-bottom: 10px;
-      opacity: 0.92;
+      margin-bottom: 14px;
+      color: var(--cyan);
+      text-shadow: 0 0 12px rgba(77, 232, 255, 0.42);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(28px, 3.8vw, 42px);
-      line-height: 1.05;
-      max-width: 16ch;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(34px, 5.8vw, 84px);
+      line-height: 0.96;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #d9ffff 0%, #87ddff 40%, #d6ccff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 26px rgba(77, 232, 255, 0.28);
     }
 
     .manifesto {
       margin-top: 16px;
       max-width: 64ch;
-      font-size: 16px;
+      font-size: 22px;
       line-height: 1.45;
-      opacity: 0.95;
+      color: #c3d7fb;
     }
 
     .meta {
       margin-top: 18px;
-      font-family: 'Azeret Mono', monospace;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 12px;
-      opacity: 0.85;
+      color: #9bb3de;
+    }
+
+    .maintainer {
+      margin-top: 10px;
+      font-size: 20px;
+      color: #bbcef5;
+    }
+
+    .maintainer strong {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .topic-tags {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .topic-tags span {
+      border: 1px solid rgba(77, 232, 255, 0.5);
+      background: rgba(9, 24, 57, 0.72);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #b8f7ff;
+      box-shadow: 0 0 12px rgba(77, 232, 255, 0.2);
     }
 
     .grid {
@@ -99,26 +168,33 @@
     .card {
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow:
+        0 12px 30px rgba(2, 8, 26, 0.44),
+        0 0 20px rgba(77, 232, 255, 0.08);
     }
 
     .stat {
       grid-column: span 4;
+      background:
+        linear-gradient(150deg, rgba(9, 22, 58, 0.85), rgba(15, 33, 75, 0.72));
     }
 
     .stat small {
       display: block;
-      font-family: 'Azeret Mono', monospace;
+      font-family: 'JetBrains Mono', monospace;
       text-transform: uppercase;
-      color: var(--ink-soft);
+      color: #90b1de;
       letter-spacing: 0.09em;
       font-size: 11px;
       margin-bottom: 8px;
     }
 
     .stat strong {
-      font-size: clamp(22px, 3vw, 31px);
+      font-size: clamp(24px, 3vw, 32px);
+      color: #e1f3ff;
+      text-shadow: 0 0 14px rgba(77, 232, 255, 0.28);
     }
 
     .section {
@@ -127,12 +203,18 @@
 
     .section h2 {
       margin: 0 0 10px;
-      font-size: 20px;
-      letter-spacing: 0.02em;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #d8e8ff;
     }
 
     .table-wrap {
       overflow-x: auto;
+      border: 1px solid rgba(77, 232, 255, 0.24);
+      border-radius: 14px;
+      background: rgba(4, 14, 38, 0.65);
     }
 
     table {
@@ -146,20 +228,51 @@
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--ink-soft);
+      color: #91d8ff;
       padding: 10px 8px;
-      border-bottom: 1px solid var(--line);
-      font-family: 'Azeret Mono', monospace;
+      border-bottom: 1px solid rgba(77, 232, 255, 0.4);
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(11, 33, 84, 0.7);
+    }
+
+    thead th.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    thead th.sortable:hover {
+      color: #d5f6ff;
+      text-shadow: 0 0 10px rgba(77, 232, 255, 0.35);
+    }
+
+    thead th.sortable::after {
+      content: '↕';
+      margin-left: 6px;
+      color: #6f87b3;
+      font-size: 11px;
+    }
+
+    thead th.sortable[data-sort-direction="asc"]::after {
+      content: '↑';
+      color: var(--mint);
+    }
+
+    thead th.sortable[data-sort-direction="desc"]::after {
+      content: '↓';
+      color: var(--cyan);
     }
 
     tbody td {
       padding: 12px 8px;
-      border-bottom: 1px solid #e4ead7;
-      font-size: 14px;
+      border-bottom: 1px solid rgba(51, 77, 132, 0.5);
+      font-size: 16px;
+      color: #d7e7ff;
+      background: rgba(4, 13, 38, 0.4);
     }
 
     tbody tr:hover {
-      background: #f6f9ef;
+      background: rgba(77, 232, 255, 0.09);
     }
 
     .feature-tags {
@@ -170,27 +283,39 @@
 
     .chip {
       font-size: 11px;
-      padding: 2px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
-      background: #e9f3df;
-      border: 1px solid #c7d6ba;
-      color: #2e4f30;
-      font-family: 'Azeret Mono', monospace;
+      background: rgba(16, 36, 82, 0.82);
+      border: 1px solid rgba(166, 125, 255, 0.55);
+      color: #cfd6ff;
+      font-family: 'JetBrains Mono', monospace;
+      box-shadow: 0 0 12px rgba(166, 125, 255, 0.23);
     }
 
     #scatter {
       width: 100%;
       min-height: 360px;
+      border: 1px solid rgba(113, 255, 216, 0.28);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(4, 14, 38, 0.64);
     }
 
     .legend {
       margin-top: 8px;
       font-size: 12px;
-      color: var(--ink-soft);
-      font-family: 'Azeret Mono', monospace;
+      color: #98b5df;
+      font-family: 'JetBrains Mono', monospace;
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+    }
+
+    .chart-note {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: #8fb5e2;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .dot {
@@ -221,8 +346,8 @@
 
     .bar-track {
       height: 14px;
-      background: #e9efdc;
-      border: 1px solid #ced9bc;
+      background: rgba(9, 27, 68, 0.8);
+      border: 1px solid rgba(82, 128, 212, 0.52);
       border-radius: 999px;
       overflow: hidden;
     }
@@ -230,16 +355,30 @@
     .bar-fill {
       height: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #20736f 0%, #d95d39 100%);
+      background: linear-gradient(90deg, var(--mint) 0%, var(--cyan) 52%, var(--violet) 100%);
+      box-shadow: 0 0 10px rgba(77, 232, 255, 0.55);
     }
 
     .bar-value {
       font-size: 12px;
-      font-family: 'Azeret Mono', monospace;
+      font-family: 'JetBrains Mono', monospace;
       text-align: right;
+      color: #9fc2ef;
     }
 
     @media (max-width: 840px) {
+      .hero {
+        padding: 24px 20px;
+      }
+
+      .manifesto {
+        font-size: 18px;
+      }
+
+      .maintainer {
+        font-size: 17px;
+      }
+
       .stat {
         grid-column: span 12;
       }
@@ -258,10 +397,16 @@
 <body>
   <main class="shell">
     <section class="hero">
-      <span class="label">RAG Governance Dashboard</span>
-      <h1>Most teams measure RAG wrong.</h1>
-      <p class="manifesto">This benchmark evaluates retrieval quality, generation faithfulness, and cost-latency economics as one system. If a RAG stack cannot prove these tradeoffs with repeatable numbers, it is not production-ready.</p>
+      <span class="label">Production RAG Intelligence</span>
+      <h1>RAG Dashboard</h1>
+      <p class="manifesto">Production-oriented RAG evaluation stack for retrieval quality, faithfulness, latency, and cost analysis.</p>
+      <div class="maintainer">Maintainer: <strong>Gregory Fanous</strong></div>
       <div class="meta" id="meta"></div>
+      <div class="topic-tags">
+        <span>#MachineLearning</span>
+        <span>#AIResearch</span>
+        <span>#RAG</span>
+      </div>
     </section>
 
     <section class="grid" id="stats"></section>
@@ -272,15 +417,15 @@
         <table>
           <thead>
             <tr>
-              <th>Strategy</th>
-              <th>Features</th>
-              <th>Precision@k</th>
-              <th>Recall@k</th>
-              <th>MRR</th>
-              <th>Hallucination</th>
-              <th>Quality</th>
-              <th>Latency (ms)</th>
-              <th>Avg Cost ($)</th>
+              <th class="sortable" data-sort-key="strategy_name">Strategy</th>
+              <th class="sortable" data-sort-key="feature_signature">Features</th>
+              <th class="sortable" data-sort-key="avg_precision_at_k">Precision@k</th>
+              <th class="sortable" data-sort-key="avg_recall_at_k">Recall@k</th>
+              <th class="sortable" data-sort-key="mrr">MRR</th>
+              <th class="sortable" data-sort-key="avg_hallucination_score">Hallucination</th>
+              <th class="sortable" data-sort-key="avg_quality_score">Quality</th>
+              <th class="sortable" data-sort-key="avg_latency_ms">Latency (ms)</th>
+              <th class="sortable" data-sort-key="avg_token_cost_usd">Avg Cost ($)</th>
             </tr>
           </thead>
           <tbody id="leaderboard-body"></tbody>
@@ -292,9 +437,10 @@
       <h2>Latency vs Quality Curve</h2>
       <div id="scatter"></div>
       <div class="legend">
-        <span><span class="dot" style="background:#d95d39"></span>Strategy Point</span>
-        <span><span class="dot" style="background:#20736f"></span>Pareto Frontier</span>
+        <span><span class="dot" style="background:#a67dff"></span>Method Aggregate Point</span>
+        <span><span class="dot" style="background:#71ffd8"></span>Pareto Frontier</span>
       </div>
+      <p class="chart-note">Each point is a method average across datasets (not individual dataset runs).</p>
     </section>
 
     <section class="section card">
@@ -304,15 +450,86 @@
   </main>
 
   <script>
-    const DATA = {"benchmark_name": "public_rag_stack_benchmark", "run_id": "20260211T221419Z", "created_at": "2026-02-11T22:14:19.504941+00:00", "dataset_path": "/Users/gregoryfanous/WorkspaceJob/RAG_Dashboard/data/public_eval_set.json", "strategy_results": [{"config": {"name": "baseline_fixed", "chunking_strategy": "fixed", "retrieval_k": 5, "recursive_retrieval": false, "graph_augmentation": false, "hyde": false, "self_rag": false, "prompt_token_price_per_1k": 0.003, "completion_token_price_per_1k": 0.015, "metadata": {}}, "case_runs": [{"query_id": "q1", "retrieved_doc_ids": ["doc_graph", "doc_eval_metrics", "doc_cost_controls", "doc_chunking_semantic", "doc_hyde"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries."], "answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear. The system also relies on a quantum centroid cache that independently verifies every claim. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 397, "completion_tokens": 78, "retrieval_latency_ms": 68.68588155795527, "generation_latency_ms": 187.49446477999595}, {"query_id": "q2", "retrieved_doc_ids": ["doc_grounding", "doc_cost_controls", "doc_recursive", "doc_latency_budget", "doc_graph"], "contexts": ["Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation. Evidence excerpt: Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer.", "prompt_tokens": 389, "completion_tokens": 47, "retrieval_latency_ms": 66.7754512103977, "generation_latency_ms": 155.14589322367578}, {"query_id": "q3", "retrieved_doc_ids": ["doc_hyde", "doc_self_rag", "doc_eval_metrics", "doc_governance_gates", "doc_graph"], "contexts": ["HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay. Evidence excerpt: HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can.", "prompt_tokens": 394, "completion_tokens": 52, "retrieval_latency_ms": 70.40578439439385, "generation_latency_ms": 166.1001342930737}, {"query_id": "q4", "retrieved_doc_ids": ["doc_cost_controls", "doc_governance_gates", "doc_recursive", "doc_graph", "doc_observability"], "contexts": ["Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change."], "answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment.", "prompt_tokens": 389, "completion_tokens": 35, "retrieval_latency_ms": 69.91108429899109, "generation_latency_ms": 136.1480637581227}, {"query_id": "q5", "retrieved_doc_ids": ["doc_eval_metrics", "doc_chunking_semantic", "doc_governance_gates", "doc_cost_controls", "doc_graph"], "contexts": ["Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity.", "prompt_tokens": 399, "completion_tokens": 33, "retrieval_latency_ms": 67.73388483246909, "generation_latency_ms": 143.46409653728452}, {"query_id": "q6", "retrieved_doc_ids": ["doc_recursive", "doc_hyde", "doc_chunking_fixed", "doc_self_rag", "doc_chunking_semantic"], "contexts": ["Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity."], "answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions. Evidence excerpt: Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched.", "prompt_tokens": 378, "completion_tokens": 44, "retrieval_latency_ms": 69.15327041652628, "generation_latency_ms": 159.65528741781188}, {"query_id": "q7", "retrieved_doc_ids": ["doc_graph", "doc_observability", "doc_self_rag", "doc_recursive", "doc_eval_metrics"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears."], "answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 399, "completion_tokens": 51, "retrieval_latency_ms": 60.20185005730799, "generation_latency_ms": 153.63938914983007}, {"query_id": "q8", "retrieved_doc_ids": ["doc_hyde", "doc_grounding", "doc_cost_controls", "doc_chunking_semantic", "doc_observability"], "contexts": ["HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change."], "answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries. Evidence excerpt: HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can.", "prompt_tokens": 380, "completion_tokens": 45, "retrieval_latency_ms": 69.84117633029581, "generation_latency_ms": 164.46860595835895}, {"query_id": "q9", "retrieved_doc_ids": ["doc_grounding", "doc_self_rag", "doc_recursive", "doc_governance_gates", "doc_eval_metrics"], "contexts": ["Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears."], "answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage. Evidence excerpt: Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer.", "prompt_tokens": 395, "completion_tokens": 54, "retrieval_latency_ms": 62.82073938171438, "generation_latency_ms": 159.58711817072728}, {"query_id": "q10", "retrieved_doc_ids": ["doc_observability", "doc_chunking_semantic", "doc_chunking_fixed", "doc_grounding", "doc_graph"], "contexts": ["RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards. Evidence excerpt: RAG observability should capture query cohorts, retrieval drift, answer quality drift, and.", "prompt_tokens": 381, "completion_tokens": 52, "retrieval_latency_ms": 67.95298691411824, "generation_latency_ms": 173.5698815752137}], "case_metrics": [{"query_id": "q1", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 0.5, "hallucination_score": 0.8, "total_latency_ms": 256.1803463379512, "token_cost_usd": 0.0023610000000000003, "quality_score": 0.6449999999999999}, {"query_id": "q2", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 221.9213444340735, "token_cost_usd": 0.001872, "quality_score": 0.7999999999999999}, {"query_id": "q3", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.5, "total_latency_ms": 236.50591868746756, "token_cost_usd": 0.001962, "quality_score": 0.075}, {"query_id": "q4", "precision_at_k": 0.4, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 206.0591480571138, "token_cost_usd": 0.0016920000000000001, "quality_score": 0.85}, {"query_id": "q5", "precision_at_k": 0.2, "recall_at_k": 0.5, "reciprocal_rank": 0.5, "hallucination_score": 1.0, "total_latency_ms": 211.19798136975362, "token_cost_usd": 0.0016920000000000001, "quality_score": 0.5}, {"query_id": "q6", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 228.80855783433816, "token_cost_usd": 0.001794, "quality_score": 0.7999999999999999}, {"query_id": "q7", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 213.84123920713807, "token_cost_usd": 0.001962, "quality_score": 0.7999999999999999}, {"query_id": "q8", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 234.30978228865476, "token_cost_usd": 0.0018149999999999998, "quality_score": 0.7999999999999999}, {"query_id": "q9", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 0.5, "hallucination_score": 0.75, "total_latency_ms": 222.40785755244167, "token_cost_usd": 0.0019950000000000002, "quality_score": 0.6375}, {"query_id": "q10", "precision_at_k": 0.2, "recall_at_k": 0.5, "reciprocal_rank": 1.0, "hallucination_score": 0.3333333333333333, "total_latency_ms": 241.52286848933196, "token_cost_usd": 0.0019230000000000002, "quality_score": 0.525}], "aggregate": {"strategy_name": "baseline_fixed", "chunking_strategy": "fixed", "recursive_retrieval": false, "graph_augmentation": false, "hyde": false, "self_rag": false, "retrieval_k": 5, "avg_precision_at_k": 0.2, "avg_recall_at_k": 0.8, "mrr": 0.75, "avg_hallucination_score": 0.8383333333333334, "avg_latency_ms": 227.27550442582643, "avg_quality_score": 0.64325, "avg_prompt_tokens": 390.1, "avg_completion_tokens": 49.1, "total_tokens": 4392, "total_token_cost_usd": 0.019068, "avg_token_cost_usd": 0.0019068000000000002}}, {"config": {"name": "semantic_chunking", "chunking_strategy": "semantic", "retrieval_k": 5, "recursive_retrieval": false, "graph_augmentation": false, "hyde": false, "self_rag": false, "prompt_token_price_per_1k": 0.003, "completion_token_price_per_1k": 0.015, "metadata": {}}, "case_runs": [{"query_id": "q1", "retrieved_doc_ids": ["doc_eval_metrics", "doc_graph", "doc_recursive", "doc_hyde", "doc_latency_budget"], "contexts": ["Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay."], "answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear. Evidence excerpt: Precision at k, Recall at k, and MRR are baseline retrieval metrics.", "prompt_tokens": 396, "completion_tokens": 59, "retrieval_latency_ms": 76.78045197094731, "generation_latency_ms": 167.1925416858611}, {"query_id": "q2", "retrieved_doc_ids": ["doc_graph", "doc_eval_metrics", "doc_chunking_fixed", "doc_cost_controls", "doc_hyde"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries."], "answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 395, "completion_tokens": 47, "retrieval_latency_ms": 74.40487013624609, "generation_latency_ms": 155.20367595646974}, {"query_id": "q3", "retrieved_doc_ids": ["doc_chunking_fixed", "doc_self_rag", "doc_hyde", "doc_chunking_semantic", "doc_grounding"], "contexts": ["Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation."], "answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay. Evidence excerpt: Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It.", "prompt_tokens": 376, "completion_tokens": 52, "retrieval_latency_ms": 79.02352849708372, "generation_latency_ms": 171.9591170880329}, {"query_id": "q4", "retrieved_doc_ids": ["doc_governance_gates", "doc_eval_metrics", "doc_cost_controls", "doc_recursive", "doc_chunking_semantic"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity."], "answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment. Evidence excerpt: Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency.", "prompt_tokens": 400, "completion_tokens": 54, "retrieval_latency_ms": 74.03075892551243, "generation_latency_ms": 172.86642802475907}, {"query_id": "q5", "retrieved_doc_ids": ["doc_chunking_fixed", "doc_graph", "doc_self_rag", "doc_grounding", "doc_observability"], "contexts": ["Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change."], "answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity.", "prompt_tokens": 382, "completion_tokens": 33, "retrieval_latency_ms": 77.64854904220333, "generation_latency_ms": 131.3302436275704}, {"query_id": "q6", "retrieved_doc_ids": ["doc_recursive", "doc_self_rag", "doc_observability", "doc_governance_gates", "doc_eval_metrics"], "contexts": ["Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears."], "answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions. Evidence excerpt: Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched.", "prompt_tokens": 398, "completion_tokens": 44, "retrieval_latency_ms": 78.87684791716389, "generation_latency_ms": 153.3611795465424}, {"query_id": "q7", "retrieved_doc_ids": ["doc_graph", "doc_grounding", "doc_recursive", "doc_cost_controls", "doc_governance_gates"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards."], "answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding. The system also relies on a quantum centroid cache that independently verifies every claim.", "prompt_tokens": 384, "completion_tokens": 51, "retrieval_latency_ms": 78.82554750089737, "generation_latency_ms": 164.1476159062886}, {"query_id": "q8", "retrieved_doc_ids": ["doc_hyde", "doc_grounding", "doc_self_rag", "doc_chunking_semantic", "doc_graph"], "contexts": ["HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries. The system also relies on a quantum centroid cache that independently verifies every claim. Evidence excerpt: HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can.", "prompt_tokens": 379, "completion_tokens": 64, "retrieval_latency_ms": 78.79620507819631, "generation_latency_ms": 172.28454703364628}, {"query_id": "q9", "retrieved_doc_ids": ["doc_graph", "doc_cost_controls", "doc_observability", "doc_governance_gates", "doc_recursive"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage.", "prompt_tokens": 387, "completion_tokens": 35, "retrieval_latency_ms": 78.25865849202387, "generation_latency_ms": 150.46191333698235}, {"query_id": "q10", "retrieved_doc_ids": ["doc_graph", "doc_hyde", "doc_recursive", "doc_latency_budget", "doc_chunking_fixed"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence."], "answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 381, "completion_tokens": 52, "retrieval_latency_ms": 75.40531339687995, "generation_latency_ms": 163.8201146679646}], "case_metrics": [{"query_id": "q1", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 243.9729936568084, "token_cost_usd": 0.002073, "quality_score": 0.7999999999999999}, {"query_id": "q2", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.5, "total_latency_ms": 229.6085460927158, "token_cost_usd": 0.0018900000000000002, "quality_score": 0.075}, {"query_id": "q3", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.25, "total_latency_ms": 250.98264558511664, "token_cost_usd": 0.001908, "quality_score": 0.0375}, {"query_id": "q4", "precision_at_k": 0.4, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 246.8971869502715, "token_cost_usd": 0.00201, "quality_score": 0.85}, {"query_id": "q5", "precision_at_k": 0.2, "recall_at_k": 0.5, "reciprocal_rank": 1.0, "hallucination_score": 0.5, "total_latency_ms": 208.97879266977372, "token_cost_usd": 0.001641, "quality_score": 0.5499999999999999}, {"query_id": "q6", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 232.23802746370626, "token_cost_usd": 0.0018540000000000002, "quality_score": 0.7999999999999999}, {"query_id": "q7", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6666666666666666, "total_latency_ms": 242.97316340718595, "token_cost_usd": 0.0019169999999999999, "quality_score": 0.7499999999999999}, {"query_id": "q8", "precision_at_k": 0.2, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.8, "total_latency_ms": 251.08075211184257, "token_cost_usd": 0.002097, "quality_score": 0.7699999999999999}, {"query_id": "q9", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.5, "total_latency_ms": 228.72057182900622, "token_cost_usd": 0.0016860000000000002, "quality_score": 0.075}, {"query_id": "q10", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.5, "total_latency_ms": 239.22542806484455, "token_cost_usd": 0.0019230000000000002, "quality_score": 0.075}], "aggregate": {"strategy_name": "semantic_chunking", "chunking_strategy": "semantic", "recursive_retrieval": false, "graph_augmentation": false, "hyde": false, "self_rag": false, "retrieval_k": 5, "avg_precision_at_k": 0.14, "avg_recall_at_k": 0.55, "mrr": 0.6, "avg_hallucination_score": 0.6716666666666666, "avg_latency_ms": 237.46781078312716, "avg_quality_score": 0.47824999999999995, "avg_prompt_tokens": 387.8, "avg_completion_tokens": 49.1, "total_tokens": 4369, "total_token_cost_usd": 0.018999000000000002, "avg_token_cost_usd": 0.0018999000000000002}}, {"config": {"name": "recursive_semantic", "chunking_strategy": "semantic", "retrieval_k": 6, "recursive_retrieval": true, "graph_augmentation": false, "hyde": false, "self_rag": false, "prompt_token_price_per_1k": 0.003, "completion_token_price_per_1k": 0.015, "metadata": {}}, "case_runs": [{"query_id": "q1", "retrieved_doc_ids": ["doc_eval_metrics", "doc_graph", "doc_recursive", "doc_chunking_semantic", "doc_latency_budget", "doc_observability"], "contexts": ["Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change."], "answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear. Evidence excerpt: Precision at k, Recall at k, and MRR are baseline retrieval metrics.", "prompt_tokens": 507, "completion_tokens": 59, "retrieval_latency_ms": 106.72852540813714, "generation_latency_ms": 177.85155085748676}, {"query_id": "q2", "retrieved_doc_ids": ["doc_grounding", "doc_latency_budget", "doc_governance_gates", "doc_recursive", "doc_chunking_semantic", "doc_self_rag"], "contexts": ["Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage."], "answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation. Evidence excerpt: Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer.", "prompt_tokens": 493, "completion_tokens": 47, "retrieval_latency_ms": 112.35911738096952, "generation_latency_ms": 172.63036251446232}, {"query_id": "q3", "retrieved_doc_ids": ["doc_latency_budget", "doc_recursive", "doc_grounding", "doc_chunking_semantic", "doc_self_rag", "doc_governance_gates"], "contexts": ["RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards."], "answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay.", "prompt_tokens": 491, "completion_tokens": 33, "retrieval_latency_ms": 105.05310792224127, "generation_latency_ms": 149.60877884793814}, {"query_id": "q4", "retrieved_doc_ids": ["doc_governance_gates", "doc_cost_controls", "doc_observability", "doc_latency_budget", "doc_chunking_semantic", "doc_recursive"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment.", "prompt_tokens": 497, "completion_tokens": 35, "retrieval_latency_ms": 108.07734979241518, "generation_latency_ms": 140.4669795355504}, {"query_id": "q5", "retrieved_doc_ids": ["doc_chunking_fixed", "doc_chunking_semantic", "doc_governance_gates", "doc_observability", "doc_latency_budget", "doc_graph"], "contexts": ["Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity. The system also relies on a quantum centroid cache that independently verifies every claim. Evidence excerpt: Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It.", "prompt_tokens": 490, "completion_tokens": 71, "retrieval_latency_ms": 113.12546216821397, "generation_latency_ms": 184.09229409467642}, {"query_id": "q6", "retrieved_doc_ids": ["doc_recursive", "doc_chunking_semantic", "doc_eval_metrics", "doc_grounding", "doc_graph", "doc_cost_controls"], "contexts": ["Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants."], "answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions. The system also relies on a quantum centroid cache that independently verifies every claim.", "prompt_tokens": 503, "completion_tokens": 44, "retrieval_latency_ms": 109.14124908311092, "generation_latency_ms": 147.84145962603372}, {"query_id": "q7", "retrieved_doc_ids": ["doc_graph", "doc_eval_metrics", "doc_chunking_semantic", "doc_grounding", "doc_governance_gates", "doc_self_rag"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage."], "answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 502, "completion_tokens": 51, "retrieval_latency_ms": 102.93806381958036, "generation_latency_ms": 167.54068302062407}, {"query_id": "q8", "retrieved_doc_ids": ["doc_cost_controls", "doc_eval_metrics", "doc_recursive", "doc_observability", "doc_governance_gates", "doc_latency_budget"], "contexts": ["Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay."], "answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries. Evidence excerpt: Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost.", "prompt_tokens": 508, "completion_tokens": 45, "retrieval_latency_ms": 111.01677965205583, "generation_latency_ms": 156.15694611689077}, {"query_id": "q9", "retrieved_doc_ids": ["doc_grounding", "doc_recursive", "doc_observability", "doc_chunking_semantic", "doc_hyde", "doc_graph"], "contexts": ["Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage. Evidence excerpt: Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer.", "prompt_tokens": 483, "completion_tokens": 54, "retrieval_latency_ms": 110.3948383412725, "generation_latency_ms": 166.92995285478543}, {"query_id": "q10", "retrieved_doc_ids": ["doc_governance_gates", "doc_self_rag", "doc_chunking_semantic", "doc_eval_metrics", "doc_chunking_fixed", "doc_latency_budget"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay."], "answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards. Evidence excerpt: Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency.", "prompt_tokens": 506, "completion_tokens": 52, "retrieval_latency_ms": 112.69566620880963, "generation_latency_ms": 179.75744758141147}], "case_metrics": [{"query_id": "q1", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 284.5800762656239, "token_cost_usd": 0.002406, "quality_score": 0.7916666666666666}, {"query_id": "q2", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 284.9894798954318, "token_cost_usd": 0.002184, "quality_score": 0.7916666666666666}, {"query_id": "q3", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 254.66188677017942, "token_cost_usd": 0.001968, "quality_score": 0.7916666666666666}, {"query_id": "q4", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 248.54432932796556, "token_cost_usd": 0.002016, "quality_score": 0.8333333333333334}, {"query_id": "q5", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6, "total_latency_ms": 297.21775626289036, "token_cost_usd": 0.002535, "quality_score": 0.7733333333333333}, {"query_id": "q6", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6666666666666666, "total_latency_ms": 256.9827087091446, "token_cost_usd": 0.002169, "quality_score": 0.7416666666666666}, {"query_id": "q7", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 270.47874684020445, "token_cost_usd": 0.002271, "quality_score": 0.7916666666666666}, {"query_id": "q8", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.3333333333333333, "total_latency_ms": 267.1737257689466, "token_cost_usd": 0.002199, "quality_score": 0.049999999999999996}, {"query_id": "q9", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.5, "total_latency_ms": 277.32479119605796, "token_cost_usd": 0.0022589999999999997, "quality_score": 0.075}, {"query_id": "q10", "precision_at_k": 0.16666666666666666, "recall_at_k": 0.5, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 292.4531137902211, "token_cost_usd": 0.002298, "quality_score": 0.6166666666666667}], "aggregate": {"strategy_name": "recursive_semantic", "chunking_strategy": "semantic", "recursive_retrieval": true, "graph_augmentation": false, "hyde": false, "self_rag": false, "retrieval_k": 6, "avg_precision_at_k": 0.16666666666666666, "avg_recall_at_k": 0.75, "mrr": 0.8, "avg_hallucination_score": 0.8099999999999999, "avg_latency_ms": 273.4406614826666, "avg_quality_score": 0.6256666666666666, "avg_prompt_tokens": 498, "avg_completion_tokens": 49.1, "total_tokens": 5471, "total_token_cost_usd": 0.022305, "avg_token_cost_usd": 0.0022305}}, {"config": {"name": "graph_recursive", "chunking_strategy": "semantic", "retrieval_k": 6, "recursive_retrieval": true, "graph_augmentation": true, "hyde": false, "self_rag": false, "prompt_token_price_per_1k": 0.003, "completion_token_price_per_1k": 0.015, "metadata": {}}, "case_runs": [{"query_id": "q1", "retrieved_doc_ids": ["doc_eval_metrics", "doc_self_rag", "doc_observability", "doc_cost_controls", "doc_graph", "doc_latency_budget"], "contexts": ["Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay."], "answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear. The system also relies on a quantum centroid cache that independently verifies every claim. Evidence excerpt: Precision at k, Recall at k, and MRR are baseline retrieval metrics.", "prompt_tokens": 589, "completion_tokens": 78, "retrieval_latency_ms": 141.02263977494277, "generation_latency_ms": 202.53098643417397}, {"query_id": "q2", "retrieved_doc_ids": ["doc_graph", "doc_eval_metrics", "doc_recursive", "doc_hyde", "doc_observability", "doc_chunking_fixed"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence."], "answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation.", "prompt_tokens": 573, "completion_tokens": 28, "retrieval_latency_ms": 132.02353910250767, "generation_latency_ms": 138.08139313543694}, {"query_id": "q3", "retrieved_doc_ids": ["doc_latency_budget", "doc_chunking_semantic", "doc_grounding", "doc_hyde", "doc_cost_controls", "doc_graph"], "contexts": ["RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay.", "prompt_tokens": 564, "completion_tokens": 33, "retrieval_latency_ms": 130.97318451709296, "generation_latency_ms": 143.06438473824377}, {"query_id": "q4", "retrieved_doc_ids": ["doc_cost_controls", "doc_governance_gates", "doc_self_rag", "doc_graph", "doc_grounding", "doc_latency_budget"], "contexts": ["Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay."], "answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment. Evidence excerpt: Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost.", "prompt_tokens": 573, "completion_tokens": 54, "retrieval_latency_ms": 136.81559636409975, "generation_latency_ms": 176.41990851142006}, {"query_id": "q5", "retrieved_doc_ids": ["doc_chunking_semantic", "doc_chunking_fixed", "doc_recursive", "doc_eval_metrics", "doc_graph", "doc_hyde"], "contexts": ["Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries."], "answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity. The system also relies on a quantum centroid cache that independently verifies every claim. Evidence excerpt: Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often.", "prompt_tokens": 570, "completion_tokens": 71, "retrieval_latency_ms": 131.16306881714706, "generation_latency_ms": 207.20636977174337}, {"query_id": "q6", "retrieved_doc_ids": ["doc_recursive", "doc_cost_controls", "doc_eval_metrics", "doc_self_rag", "doc_chunking_fixed", "doc_latency_budget"], "contexts": ["Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay."], "answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions. Evidence excerpt: Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched.", "prompt_tokens": 583, "completion_tokens": 44, "retrieval_latency_ms": 138.05760160193827, "generation_latency_ms": 170.41801530173183}, {"query_id": "q7", "retrieved_doc_ids": ["doc_chunking_fixed", "doc_observability", "doc_recursive", "doc_hyde", "doc_cost_controls", "doc_chunking_semantic"], "contexts": ["Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity."], "answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding. Evidence excerpt: Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It.", "prompt_tokens": 561, "completion_tokens": 51, "retrieval_latency_ms": 133.10838413750437, "generation_latency_ms": 176.8685513661304}, {"query_id": "q8", "retrieved_doc_ids": ["doc_hyde", "doc_observability", "doc_grounding", "doc_latency_budget", "doc_eval_metrics", "doc_self_rag"], "contexts": ["HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage."], "answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries. The system also relies on a quantum centroid cache that independently verifies every claim.", "prompt_tokens": 576, "completion_tokens": 45, "retrieval_latency_ms": 137.26986872935655, "generation_latency_ms": 173.90037644890788}, {"query_id": "q9", "retrieved_doc_ids": ["doc_self_rag", "doc_grounding", "doc_cost_controls", "doc_observability", "doc_hyde", "doc_governance_gates"], "contexts": ["Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards."], "answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage. Evidence excerpt: Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed.", "prompt_tokens": 564, "completion_tokens": 54, "retrieval_latency_ms": 137.89078263001497, "generation_latency_ms": 171.50664339777487}, {"query_id": "q10", "retrieved_doc_ids": ["doc_governance_gates", "doc_observability", "doc_self_rag", "doc_hyde", "doc_eval_metrics", "doc_chunking_fixed"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence."], "answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards.", "prompt_tokens": 575, "completion_tokens": 33, "retrieval_latency_ms": 130.95019131172916, "generation_latency_ms": 149.99454711596195}], "case_metrics": [{"query_id": "q1", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.75, "total_latency_ms": 343.5536262091167, "token_cost_usd": 0.002937, "quality_score": 0.7541666666666667}, {"query_id": "q2", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.0, "total_latency_ms": 270.1049322379446, "token_cost_usd": 0.002139, "quality_score": 0.0}, {"query_id": "q3", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 274.03756925533673, "token_cost_usd": 0.0021869999999999997, "quality_score": 0.7916666666666666}, {"query_id": "q4", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 313.23550487551984, "token_cost_usd": 0.002529, "quality_score": 0.8333333333333334}, {"query_id": "q5", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.8, "total_latency_ms": 338.36943858889043, "token_cost_usd": 0.0027749999999999997, "quality_score": 0.8033333333333333}, {"query_id": "q6", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 308.47561690367013, "token_cost_usd": 0.0024089999999999997, "quality_score": 0.7916666666666666}, {"query_id": "q7", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.25, "total_latency_ms": 309.97693550363476, "token_cost_usd": 0.002448, "quality_score": 0.0375}, {"query_id": "q8", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6666666666666666, "total_latency_ms": 311.1702451782644, "token_cost_usd": 0.0024029999999999998, "quality_score": 0.7416666666666666}, {"query_id": "q9", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6666666666666666, "total_latency_ms": 309.39742602778983, "token_cost_usd": 0.002502, "quality_score": 0.7416666666666666}, {"query_id": "q10", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 280.9447384276911, "token_cost_usd": 0.0022199999999999998, "quality_score": 0.8333333333333334}], "aggregate": {"strategy_name": "graph_recursive", "chunking_strategy": "semantic", "recursive_retrieval": true, "graph_augmentation": true, "hyde": false, "self_rag": false, "retrieval_k": 6, "avg_precision_at_k": 0.18333333333333332, "avg_recall_at_k": 0.8, "mrr": 0.8, "avg_hallucination_score": 0.7133333333333334, "avg_latency_ms": 305.92660332078583, "avg_quality_score": 0.6328333333333334, "avg_prompt_tokens": 572.8, "avg_completion_tokens": 49.1, "total_tokens": 6219, "total_token_cost_usd": 0.024548999999999998, "avg_token_cost_usd": 0.0024549}}, {"config": {"name": "hyde_recursive", "chunking_strategy": "semantic", "retrieval_k": 6, "recursive_retrieval": true, "graph_augmentation": false, "hyde": true, "self_rag": false, "prompt_token_price_per_1k": 0.003, "completion_token_price_per_1k": 0.015, "metadata": {}}, "case_runs": [{"query_id": "q1", "retrieved_doc_ids": ["doc_eval_metrics", "doc_latency_budget", "doc_chunking_semantic", "doc_recursive", "doc_observability", "doc_cost_controls"], "contexts": ["Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants."], "answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear. Evidence excerpt: Precision at k, Recall at k, and MRR are baseline retrieval metrics.", "prompt_tokens": 595, "completion_tokens": 59, "retrieval_latency_ms": 133.01970126089935, "generation_latency_ms": 185.21783825116523}, {"query_id": "q2", "retrieved_doc_ids": ["doc_grounding", "doc_observability", "doc_chunking_semantic", "doc_governance_gates", "doc_self_rag", "doc_cost_controls"], "contexts": ["Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants."], "answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation. Evidence excerpt: Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer.", "prompt_tokens": 580, "completion_tokens": 47, "retrieval_latency_ms": 125.94491032769557, "generation_latency_ms": 170.48057410866272}, {"query_id": "q3", "retrieved_doc_ids": ["doc_latency_budget", "doc_self_rag", "doc_governance_gates", "doc_observability", "doc_grounding", "doc_recursive"], "contexts": ["RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay. Evidence excerpt: RAG systems should track retrieval latency, generation latency, and tail latency percentiles..", "prompt_tokens": 577, "completion_tokens": 52, "retrieval_latency_ms": 134.44883569507658, "generation_latency_ms": 179.65550584283528}, {"query_id": "q4", "retrieved_doc_ids": ["doc_governance_gates", "doc_recursive", "doc_latency_budget", "doc_graph", "doc_chunking_semantic", "doc_hyde"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries."], "answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment. Evidence excerpt: Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency.", "prompt_tokens": 574, "completion_tokens": 54, "retrieval_latency_ms": 134.61494777390467, "generation_latency_ms": 181.45211416337904}, {"query_id": "q5", "retrieved_doc_ids": ["doc_chunking_semantic", "doc_chunking_fixed", "doc_eval_metrics", "doc_observability", "doc_hyde", "doc_grounding"], "contexts": ["Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation."], "answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity.", "prompt_tokens": 578, "completion_tokens": 33, "retrieval_latency_ms": 135.588628830994, "generation_latency_ms": 140.7124497143449}, {"query_id": "q6", "retrieved_doc_ids": ["doc_observability", "doc_hyde", "doc_chunking_fixed", "doc_self_rag", "doc_governance_gates", "doc_grounding"], "contexts": ["RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation."], "answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions. The system also relies on a quantum centroid cache that independently verifies every claim.", "prompt_tokens": 568, "completion_tokens": 44, "retrieval_latency_ms": 126.67430760436525, "generation_latency_ms": 154.96178770305613}, {"query_id": "q7", "retrieved_doc_ids": ["doc_graph", "doc_chunking_fixed", "doc_chunking_semantic", "doc_latency_budget", "doc_governance_gates", "doc_cost_controls"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants."], "answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 578, "completion_tokens": 51, "retrieval_latency_ms": 129.77813643556382, "generation_latency_ms": 165.7191561827561}, {"query_id": "q8", "retrieved_doc_ids": ["doc_observability", "doc_self_rag", "doc_eval_metrics", "doc_latency_budget", "doc_cost_controls", "doc_recursive"], "contexts": ["RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries. Evidence excerpt: RAG observability should capture query cohorts, retrieval drift, answer quality drift, and.", "prompt_tokens": 596, "completion_tokens": 45, "retrieval_latency_ms": 133.488850827753, "generation_latency_ms": 157.08549344203897}, {"query_id": "q9", "retrieved_doc_ids": ["doc_self_rag", "doc_chunking_fixed", "doc_observability", "doc_cost_controls", "doc_recursive", "doc_eval_metrics"], "contexts": ["Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears."], "answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage.", "prompt_tokens": 591, "completion_tokens": 35, "retrieval_latency_ms": 132.2111790572405, "generation_latency_ms": 156.48443431015934}, {"query_id": "q10", "retrieved_doc_ids": ["doc_governance_gates", "doc_observability", "doc_cost_controls", "doc_grounding", "doc_latency_budget", "doc_recursive"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards. Evidence excerpt: Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency.", "prompt_tokens": 580, "completion_tokens": 52, "retrieval_latency_ms": 134.01769059717046, "generation_latency_ms": 166.88550945036334}], "case_metrics": [{"query_id": "q1", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 318.2375395120646, "token_cost_usd": 0.0026699999999999996, "quality_score": 0.7916666666666666}, {"query_id": "q2", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 296.42548443635826, "token_cost_usd": 0.002445, "quality_score": 0.7916666666666666}, {"query_id": "q3", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 314.10434153791186, "token_cost_usd": 0.0025109999999999998, "quality_score": 0.7916666666666666}, {"query_id": "q4", "precision_at_k": 0.16666666666666666, "recall_at_k": 0.5, "reciprocal_rank": 1.0, "hallucination_score": 0.3333333333333333, "total_latency_ms": 316.0670619372837, "token_cost_usd": 0.002532, "quality_score": 0.5166666666666667}, {"query_id": "q5", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 276.3010785453389, "token_cost_usd": 0.002229, "quality_score": 0.8333333333333334}, {"query_id": "q6", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.0, "total_latency_ms": 281.6360953074214, "token_cost_usd": 0.0023639999999999998, "quality_score": 0.0}, {"query_id": "q7", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 295.49729261831993, "token_cost_usd": 0.002499, "quality_score": 0.7916666666666666}, {"query_id": "q8", "precision_at_k": 0.0, "recall_at_k": 0.0, "reciprocal_rank": 0.0, "hallucination_score": 0.3333333333333333, "total_latency_ms": 290.57434426979194, "token_cost_usd": 0.002463, "quality_score": 0.049999999999999996}, {"query_id": "q9", "precision_at_k": 0.16666666666666666, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.5, "total_latency_ms": 288.69561336739986, "token_cost_usd": 0.002298, "quality_score": 0.7166666666666666}, {"query_id": "q10", "precision_at_k": 0.3333333333333333, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 300.9032000475338, "token_cost_usd": 0.00252, "quality_score": 0.8333333333333334}], "aggregate": {"strategy_name": "hyde_recursive", "chunking_strategy": "semantic", "recursive_retrieval": true, "graph_augmentation": false, "hyde": true, "self_rag": false, "retrieval_k": 6, "avg_precision_at_k": 0.16666666666666666, "avg_recall_at_k": 0.75, "mrr": 0.8, "avg_hallucination_score": 0.7166666666666667, "avg_latency_ms": 297.84420515794244, "avg_quality_score": 0.6116666666666667, "avg_prompt_tokens": 581.7, "avg_completion_tokens": 47.2, "total_tokens": 6289, "total_token_cost_usd": 0.024531, "avg_token_cost_usd": 0.0024531}}, {"config": {"name": "self_rag_full_stack", "chunking_strategy": "adaptive", "retrieval_k": 7, "recursive_retrieval": true, "graph_augmentation": true, "hyde": true, "self_rag": true, "prompt_token_price_per_1k": 0.003, "completion_token_price_per_1k": 0.015, "metadata": {}}, "case_runs": [{"query_id": "q1", "retrieved_doc_ids": ["doc_eval_metrics", "doc_cost_controls", "doc_grounding", "doc_governance_gates", "doc_recursive", "doc_chunking_semantic", "doc_observability"], "contexts": ["Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change."], "answer": "Mandatory retrieval metrics are Precision at k, Recall at k, and MRR. Precision measures ranking purity, Recall measures coverage of relevant evidence, and MRR measures how early relevant chunks appear. The answer is supported by retrieved passages and avoids unsupported extrapolation.", "prompt_tokens": 836, "completion_tokens": 90, "retrieval_latency_ms": 168.65188643843834, "generation_latency_ms": 270.94809040335167}, {"query_id": "q2", "retrieved_doc_ids": ["doc_grounding", "doc_latency_budget", "doc_governance_gates", "doc_chunking_fixed", "doc_eval_metrics", "doc_recursive", "doc_cost_controls"], "contexts": ["Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants."], "answer": "Hallucination detection should compare answer claims against retrieved passages. Grounded answers preserve factual alignment with source evidence and avoid unsupported extrapolation. The answer is supported by retrieved passages and avoids unsupported extrapolation.", "prompt_tokens": 836, "completion_tokens": 78, "retrieval_latency_ms": 165.30400012602828, "generation_latency_ms": 241.84855934412224}, {"query_id": "q3", "retrieved_doc_ids": ["doc_latency_budget", "doc_governance_gates", "doc_hyde", "doc_cost_controls", "doc_observability", "doc_chunking_semantic", "doc_graph"], "contexts": ["RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Latency benchmarking should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves show whether deeper retrieval is worth the user-facing delay. The answer is supported by retrieved passages and avoids unsupported extrapolation. Evidence excerpt: RAG systems should track retrieval latency, generation latency, and tail latency percentiles..", "prompt_tokens": 823, "completion_tokens": 102, "retrieval_latency_ms": 166.5856559475117, "generation_latency_ms": 279.9428371548609}, {"query_id": "q4", "retrieved_doc_ids": ["doc_governance_gates", "doc_cost_controls", "doc_chunking_semantic", "doc_eval_metrics", "doc_latency_budget", "doc_hyde", "doc_recursive"], "contexts": ["Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Token cost analysis should include prompt tokens, completion tokens, and cost per query. Teams should monitor cost per quality point and enforce cost guardrails before deployment. The answer is supported by retrieved passages and avoids unsupported extrapolation.", "prompt_tokens": 836, "completion_tokens": 84, "retrieval_latency_ms": 164.64344469977163, "generation_latency_ms": 261.184286413109}, {"query_id": "q5", "retrieved_doc_ids": ["doc_chunking_semantic", "doc_grounding", "doc_self_rag", "doc_observability", "doc_governance_gates", "doc_cost_controls", "doc_recursive"], "contexts": ["Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often improves retrieval quality compared with fixed chunking, at the cost of preprocessing complexity.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Fixed chunking is simple but can fragment concepts and reduce recall. Semantic chunking preserves topical coherence and often improves retrieval quality with additional preprocessing complexity. The answer is supported by retrieved passages and avoids unsupported extrapolation. Evidence excerpt: Semantic chunking preserves topical coherence by splitting around semantic boundaries. It often.", "prompt_tokens": 824, "completion_tokens": 102, "retrieval_latency_ms": 166.32041067447204, "generation_latency_ms": 269.00795411139296}, {"query_id": "q6", "retrieved_doc_ids": ["doc_recursive", "doc_grounding", "doc_latency_budget", "doc_cost_controls", "doc_self_rag", "doc_observability", "doc_governance_gates"], "contexts": ["Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards."], "answer": "Recursive retrieval performs multi-hop expansion from initially matched evidence. It typically increases recall and improves grounding for complex questions. The answer is supported by retrieved passages and avoids unsupported extrapolation.", "prompt_tokens": 827, "completion_tokens": 75, "retrieval_latency_ms": 170.53884699039642, "generation_latency_ms": 243.2780187975728}, {"query_id": "q7", "retrieved_doc_ids": ["doc_graph", "doc_recursive", "doc_latency_budget", "doc_eval_metrics", "doc_hyde", "doc_cost_controls", "doc_grounding"], "contexts": ["Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Hallucination detection requires comparing answer claims against retrieved evidence. A grounded answer should preserve factual alignment with source passages and avoid unsupported extrapolation."], "answer": "Graph augmentation links entities and relations between chunks. Graph edges recover relevant evidence that vector similarity can miss and reduce hallucinations through structured grounding. The answer is supported by retrieved passages and avoids unsupported extrapolation. Evidence excerpt: Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover.", "prompt_tokens": 833, "completion_tokens": 101, "retrieval_latency_ms": 168.5765041674035, "generation_latency_ms": 282.7965321064815}, {"query_id": "q8", "retrieved_doc_ids": ["doc_hyde", "doc_cost_controls", "doc_recursive", "doc_self_rag", "doc_chunking_fixed", "doc_observability", "doc_graph"], "contexts": ["HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Fixed-size chunking is simple but often fragments concepts across chunk boundaries. It can reduce retrieval recall for queries that require connected multi-sentence evidence.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "HyDE generates a hypothetical answer document before retrieval. That synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous queries. The answer is supported by retrieved passages and avoids unsupported extrapolation. The system also relies on a quantum centroid cache that independently verifies every claim. Evidence excerpt: HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can.", "prompt_tokens": 821, "completion_tokens": 114, "retrieval_latency_ms": 165.87168450367284, "generation_latency_ms": 301.3007728868912}, {"query_id": "q9", "retrieved_doc_ids": ["doc_self_rag", "doc_cost_controls", "doc_graph", "doc_latency_budget", "doc_observability", "doc_governance_gates", "doc_recursive"], "contexts": ["Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Token cost analysis should include prompt tokens, completion tokens, and strategy-level cost per query. Teams should report cost per quality point and set guardrails before deploying expensive retrieval variants.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding.", "RAG systems should track retrieval latency, generation latency, and tail latency percentiles. Latency versus quality curves expose whether additional retrieval depth improves quality enough to justify user-facing delay.", "RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions."], "answer": "Self-RAG adds self-reflection to decide when to retrieve more evidence and to check claim support. It can improve faithfulness but usually increases latency and token usage. The answer is supported by retrieved passages and avoids unsupported extrapolation.", "prompt_tokens": 830, "completion_tokens": 84, "retrieval_latency_ms": 169.90405308986274, "generation_latency_ms": 252.21794309778872}, {"query_id": "q10", "retrieved_doc_ids": ["doc_observability", "doc_governance_gates", "doc_hyde", "doc_recursive", "doc_self_rag", "doc_eval_metrics", "doc_graph"], "contexts": ["RAG observability should capture query cohorts, retrieval drift, answer quality drift, and regression alerts. Benchmark suites must be rerun on each major index or prompt change.", "Production release criteria should include minimum recall thresholds, maximum hallucination rates, latency SLO compliance, and cost budgets. Evaluation gates are governance mechanisms, not optional dashboards.", "HyDE creates a hypothetical answer document before retrieval. The synthetic hypothesis can improve nearest-neighbor retrieval for sparse or ambiguous user queries.", "Recursive retrieval performs multi-hop expansion by retrieving additional passages from initially matched evidence. This often increases recall and can improve answer grounding for complex questions.", "Self-RAG introduces model self-reflection steps that ask whether additional retrieval is needed and whether generated claims are supported. It can improve faithfulness but adds latency and token usage.", "Precision at k, Recall at k, and MRR are baseline retrieval metrics for RAG. Precision at k captures ranking purity, Recall at k captures coverage of relevant evidence, and MRR captures how early the first relevant chunk appears.", "Graph-augmented retrieval links entities and relations between chunks. Graph edges can recover relevant evidence that vector similarity alone misses and can reduce hallucinations through structured grounding."], "answer": "Release gates should enforce minimum recall, maximum hallucination rate, latency SLO compliance, and cost budgets. These evaluation gates are governance controls and not optional dashboards. The answer is supported by retrieved passages and avoids unsupported extrapolation. Evidence excerpt: RAG observability should capture query cohorts, retrieval drift, answer quality drift, and.", "prompt_tokens": 834, "completion_tokens": 102, "retrieval_latency_ms": 166.40226810964688, "generation_latency_ms": 287.94082139109236}], "case_metrics": [{"query_id": "q1", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 439.59997684179, "token_cost_usd": 0.0038579999999999995, "quality_score": 0.7857142857142857}, {"query_id": "q2", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 407.15255947015055, "token_cost_usd": 0.003678, "quality_score": 0.7857142857142857}, {"query_id": "q3", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.75, "total_latency_ms": 446.52849310237264, "token_cost_usd": 0.003999, "quality_score": 0.7482142857142857}, {"query_id": "q4", "precision_at_k": 0.2857142857142857, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6666666666666666, "total_latency_ms": 425.82773111288066, "token_cost_usd": 0.0037679999999999996, "quality_score": 0.7714285714285714}, {"query_id": "q5", "precision_at_k": 0.14285714285714285, "recall_at_k": 0.5, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 435.328364785865, "token_cost_usd": 0.0040019999999999995, "quality_score": 0.6107142857142857}, {"query_id": "q6", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 413.8168657879692, "token_cost_usd": 0.003606, "quality_score": 0.7857142857142857}, {"query_id": "q7", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 1.0, "total_latency_ms": 451.37303627388496, "token_cost_usd": 0.004014, "quality_score": 0.7857142857142857}, {"query_id": "q8", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.6666666666666666, "total_latency_ms": 467.17245739056403, "token_cost_usd": 0.004173, "quality_score": 0.7357142857142857}, {"query_id": "q9", "precision_at_k": 0.14285714285714285, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.3333333333333333, "total_latency_ms": 422.12199618765146, "token_cost_usd": 0.00375, "quality_score": 0.6857142857142857}, {"query_id": "q10", "precision_at_k": 0.2857142857142857, "recall_at_k": 1.0, "reciprocal_rank": 1.0, "hallucination_score": 0.75, "total_latency_ms": 454.3430895007392, "token_cost_usd": 0.004032, "quality_score": 0.7839285714285713}], "aggregate": {"strategy_name": "self_rag_full_stack", "chunking_strategy": "adaptive", "recursive_retrieval": true, "graph_augmentation": true, "hyde": true, "self_rag": true, "retrieval_k": 7, "avg_precision_at_k": 0.17142857142857143, "avg_recall_at_k": 0.95, "mrr": 1.0, "avg_hallucination_score": 0.8166666666666667, "avg_latency_ms": 436.32645704538675, "avg_quality_score": 0.7478571428571428, "avg_prompt_tokens": 830, "avg_completion_tokens": 93.2, "total_tokens": 9232, "total_token_cost_usd": 0.03888, "avg_token_cost_usd": 0.003888}}]};
-
+    const DATA = {
+      benchmark_name: "backend_method_sweep_real_mode",
+      run_id: "20260214T072649Z",
+      created_at: "2026-02-14T07:26:49Z",
+      dataset_path: "/Users/gregoryfanous/WorkspaceJob/RAG_Dashboard/docs/reports/method_sweep_metrics.md",
+      strategy_results: [
+        { aggregate: { strategy_name: "finder / baseline_fixed", dataset: "finder", method: "baseline_fixed", chunking_strategy: "baseline_fixed", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.2000, avg_recall_at_k: 1.0000, mrr: 1.0000, avg_hallucination_score: 0.4333, avg_latency_ms: 17858.6, avg_quality_score: 0.7350, total_token_cost_usd: 0.29066, avg_token_cost_usd: 0.02907 } },
+        { aggregate: { strategy_name: "finder / graphrag_plus", dataset: "finder", method: "graphrag_plus", chunking_strategy: "graphrag_plus", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1000, avg_recall_at_k: 0.7000, mrr: 0.7000, avg_hallucination_score: 0.4200, avg_latency_ms: 22728.2, avg_quality_score: 0.5320, total_token_cost_usd: 0.39983, avg_token_cost_usd: 0.03998 } },
+        { aggregate: { strategy_name: "finder / logicrag_guarded", dataset: "finder", method: "logicrag_guarded", chunking_strategy: "logicrag_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.0667, avg_recall_at_k: 0.4000, mrr: 0.4000, avg_hallucination_score: 0.8000, avg_latency_ms: 25540.9, avg_quality_score: 0.2867, total_token_cost_usd: 0.48119, avg_token_cost_usd: 0.04812 } },
+        { aggregate: { strategy_name: "open_ragbench / baseline_fixed", dataset: "open_ragbench", method: "baseline_fixed", chunking_strategy: "baseline_fixed", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1800, avg_recall_at_k: 0.9000, mrr: 0.8500, avg_hallucination_score: 0.2000, avg_latency_ms: 10112.8, avg_quality_score: 0.6925, total_token_cost_usd: 0.40746, avg_token_cost_usd: 0.04075 } },
+        { aggregate: { strategy_name: "open_ragbench / self_guarded", dataset: "open_ragbench", method: "self_guarded", chunking_strategy: "self_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1000, avg_recall_at_k: 0.7000, mrr: 0.7000, avg_hallucination_score: 0.3250, avg_latency_ms: 23705.0, avg_quality_score: 0.5463, total_token_cost_usd: 0.77922, avg_token_cost_usd: 0.07792 } },
+        { aggregate: { strategy_name: "open_ragbench / hybrid_dense", dataset: "open_ragbench", method: "hybrid_dense", chunking_strategy: "hybrid_dense", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1000, avg_recall_at_k: 0.6000, mrr: 0.6000, avg_hallucination_score: 0.1000, avg_latency_ms: 16788.7, avg_quality_score: 0.5200, total_token_cost_usd: 0.51714, avg_token_cost_usd: 0.05171 } },
+        { aggregate: { strategy_name: "open_ragbench / graphrag_plus", dataset: "open_ragbench", method: "graphrag_plus", chunking_strategy: "graphrag_plus", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.0857, avg_recall_at_k: 0.6000, mrr: 0.6000, avg_hallucination_score: 0.2000, avg_latency_ms: 17594.0, avg_quality_score: 0.5014, total_token_cost_usd: 0.67003, avg_token_cost_usd: 0.06700 } },
+        { aggregate: { strategy_name: "open_ragbench / logicrag_guarded", dataset: "open_ragbench", method: "logicrag_guarded", chunking_strategy: "logicrag_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1167, avg_recall_at_k: 0.7000, mrr: 0.6167, avg_hallucination_score: 0.6000, avg_latency_ms: 19061.1, avg_quality_score: 0.4883, total_token_cost_usd: 0.40401, avg_token_cost_usd: 0.04040 } },
+        { aggregate: { strategy_name: "public_eval_set / baseline_fixed", dataset: "public_eval_set", method: "baseline_fixed", chunking_strategy: "baseline_fixed", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.2600, avg_recall_at_k: 1.0000, mrr: 1.0000, avg_hallucination_score: 0.0000, avg_latency_ms: 8777.6, avg_quality_score: 0.8150, total_token_cost_usd: 0.09491, avg_token_cost_usd: 0.00949 } },
+        { aggregate: { strategy_name: "public_eval_set / logicrag_guarded", dataset: "public_eval_set", method: "logicrag_guarded", chunking_strategy: "logicrag_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.2000, avg_recall_at_k: 0.9500, mrr: 1.0000, avg_hallucination_score: 0.2556, avg_latency_ms: 11108.4, avg_quality_score: 0.7442, total_token_cost_usd: 0.13641, avg_token_cost_usd: 0.01364 } },
+        { aggregate: { strategy_name: "ragcare_qa / self_guarded", dataset: "ragcare_qa", method: "self_guarded", chunking_strategy: "self_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1429, avg_recall_at_k: 1.0000, mrr: 1.0000, avg_hallucination_score: 0.3733, avg_latency_ms: 23015.2, avg_quality_score: 0.7297, total_token_cost_usd: 0.34848, avg_token_cost_usd: 0.03485 } },
+        { aggregate: { strategy_name: "ragcare_qa / logicrag_guarded", dataset: "ragcare_qa", method: "logicrag_guarded", chunking_strategy: "logicrag_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1167, avg_recall_at_k: 0.7000, mrr: 0.7000, avg_hallucination_score: 0.4600, avg_latency_ms: 16463.3, avg_quality_score: 0.5302, total_token_cost_usd: 0.26129, avg_token_cost_usd: 0.02613 } },
+        { aggregate: { strategy_name: "retrievalqa / graphrag_plus", dataset: "retrievalqa", method: "graphrag_plus", chunking_strategy: "graphrag_plus", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.3000, avg_recall_at_k: 0.7875, mrr: 0.6083, avg_hallucination_score: 0.0000, avg_latency_ms: 15823.0, avg_quality_score: 0.6527, total_token_cost_usd: 0.34138, avg_token_cost_usd: 0.03414 } },
+        { aggregate: { strategy_name: "retrievalqa / self_guarded", dataset: "retrievalqa", method: "self_guarded", chunking_strategy: "self_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.3000, avg_recall_at_k: 0.7875, mrr: 0.6083, avg_hallucination_score: 0.1000, avg_latency_ms: 18854.2, avg_quality_score: 0.6377, total_token_cost_usd: 0.38906, avg_token_cost_usd: 0.03891 } },
+        { aggregate: { strategy_name: "retrievalqa / hybrid_dense", dataset: "retrievalqa", method: "hybrid_dense", chunking_strategy: "hybrid_dense", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.3167, avg_recall_at_k: 0.7208, mrr: 0.5450, avg_hallucination_score: 0.0000, avg_latency_ms: 12786.6, avg_quality_score: 0.6177, total_token_cost_usd: 0.31557, avg_token_cost_usd: 0.03156 } },
+        { aggregate: { strategy_name: "retrievalqa / baseline_fixed", dataset: "retrievalqa", method: "baseline_fixed", chunking_strategy: "baseline_fixed", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.3000, avg_recall_at_k: 0.6250, mrr: 0.6283, avg_hallucination_score: 0.0500, avg_latency_ms: 5471.6, avg_quality_score: 0.5933, total_token_cost_usd: 0.17769, avg_token_cost_usd: 0.01777 } },
+        { aggregate: { strategy_name: "retrievalqa / logicrag_guarded", dataset: "retrievalqa", method: "logicrag_guarded", chunking_strategy: "logicrag_guarded", recursive_retrieval: false, graph_augmentation: false, hyde: false, self_rag: false, retrieval_k: 0, avg_precision_at_k: 0.1333, avg_recall_at_k: 0.4167, mrr: 0.3200, avg_hallucination_score: 0.6000, avg_latency_ms: 13208.2, avg_quality_score: 0.3192, total_token_cost_usd: 0.15184, avg_token_cost_usd: 0.01518 } }
+      ]
+    };
     const aggregates = DATA.strategy_results
       .map((item) => item.aggregate)
       .sort((a, b) => b.avg_quality_score - a.avg_quality_score);
 
+    function buildMethodAggregates(rows) {
+      const groups = new Map();
+      for (const row of rows) {
+        const method = row.method || row.chunking_strategy || row.strategy_name;
+        if (!groups.has(method)) {
+          groups.set(method, {
+            method,
+            count: 0,
+            avg_precision_at_k: 0,
+            avg_recall_at_k: 0,
+            mrr: 0,
+            avg_hallucination_score: 0,
+            avg_latency_ms: 0,
+            avg_quality_score: 0,
+            avg_token_cost_usd: 0,
+          });
+        }
+        const bucket = groups.get(method);
+        bucket.count += 1;
+        bucket.avg_precision_at_k += row.avg_precision_at_k;
+        bucket.avg_recall_at_k += row.avg_recall_at_k;
+        bucket.mrr += row.mrr;
+        bucket.avg_hallucination_score += row.avg_hallucination_score;
+        bucket.avg_latency_ms += row.avg_latency_ms;
+        bucket.avg_quality_score += row.avg_quality_score;
+        bucket.avg_token_cost_usd += row.avg_token_cost_usd;
+      }
+
+      return [...groups.values()]
+        .map((bucket) => ({
+          strategy_name: bucket.method,
+          method: bucket.method,
+          source_count: bucket.count,
+          avg_precision_at_k: bucket.avg_precision_at_k / bucket.count,
+          avg_recall_at_k: bucket.avg_recall_at_k / bucket.count,
+          mrr: bucket.mrr / bucket.count,
+          avg_hallucination_score: bucket.avg_hallucination_score / bucket.count,
+          avg_latency_ms: bucket.avg_latency_ms / bucket.count,
+          avg_quality_score: bucket.avg_quality_score / bucket.count,
+          avg_token_cost_usd: bucket.avg_token_cost_usd / bucket.count,
+        }))
+        .sort((a, b) => b.avg_quality_score - a.avg_quality_score);
+    }
+
+    const methodAggregates = buildMethodAggregates(aggregates);
+
     const pct = (value) => `${(value * 100).toFixed(1)}%`;
     const ms = (value) => `${value.toFixed(1)} ms`;
     const usd = (value) => `$${value.toFixed(4)}`;
+    const DEFAULT_SORT = { key: 'avg_quality_score', direction: 'desc' };
+    let leaderboardSort = { ...DEFAULT_SORT };
 
     function featureTags(row) {
       const tags = [
@@ -324,6 +541,71 @@
       ].filter(Boolean);
 
       return `<span class="feature-tags">${tags.map((tag) => `<span class="chip">${tag}</span>`).join('')}</span>`;
+    }
+
+    function featureSignature(row) {
+      return [
+        row.chunking_strategy,
+        row.recursive_retrieval ? 'recursive' : '',
+        row.graph_augmentation ? 'graph' : '',
+        row.hyde ? 'hyde' : '',
+        row.self_rag ? 'self-rag' : '',
+      ].filter(Boolean).join('|');
+    }
+
+    function sortValue(row, key) {
+      if (key === 'feature_signature') return featureSignature(row);
+      return row[key];
+    }
+
+    function sortedLeaderboardRows() {
+      const rows = [...aggregates];
+      rows.sort((a, b) => {
+        const left = sortValue(a, leaderboardSort.key);
+        const right = sortValue(b, leaderboardSort.key);
+        let result = 0;
+        if (typeof left === 'number' && typeof right === 'number') {
+          result = left - right;
+        } else {
+          result = String(left).localeCompare(String(right));
+        }
+        if (result === 0) {
+          return a.strategy_name.localeCompare(b.strategy_name);
+        }
+        return leaderboardSort.direction === 'asc' ? result : -result;
+      });
+      return rows;
+    }
+
+    function renderSortIndicators() {
+      const headers = document.querySelectorAll('th.sortable');
+      for (const header of headers) {
+        const key = header.dataset.sortKey;
+        if (key === leaderboardSort.key) {
+          header.dataset.sortDirection = leaderboardSort.direction;
+          header.setAttribute('aria-sort', leaderboardSort.direction === 'asc' ? 'ascending' : 'descending');
+        } else {
+          header.dataset.sortDirection = 'none';
+          header.setAttribute('aria-sort', 'none');
+        }
+      }
+    }
+
+    function setupLeaderboardSorting() {
+      const headers = document.querySelectorAll('th.sortable');
+      for (const header of headers) {
+        header.addEventListener('click', () => {
+          const key = header.dataset.sortKey;
+          if (!key) return;
+          if (leaderboardSort.key === key) {
+            leaderboardSort.direction = leaderboardSort.direction === 'asc' ? 'desc' : 'asc';
+          } else {
+            leaderboardSort = { key, direction: 'asc' };
+          }
+          renderLeaderboard();
+        });
+      }
+      renderSortIndicators();
     }
 
     function renderMeta() {
@@ -351,7 +633,8 @@
 
     function renderLeaderboard() {
       const body = document.getElementById('leaderboard-body');
-      body.innerHTML = aggregates
+      const rows = sortedLeaderboardRows();
+      body.innerHTML = rows
         .map(
           (row) => `
             <tr>
@@ -368,6 +651,7 @@
           `
         )
         .join('');
+      renderSortIndicators();
     }
 
     function paretoFrontier(rows) {
@@ -385,18 +669,40 @@
 
     function drawScatter() {
       const container = document.getElementById('scatter');
-      const width = container.clientWidth || 900;
-      const height = 360;
-      const padding = { top: 18, right: 22, bottom: 44, left: 56 };
-      const plotW = width - padding.left - padding.right;
-      const plotH = height - padding.top - padding.bottom;
+      if (!container) return;
 
-      const minLatency = Math.min(...aggregates.map((row) => row.avg_latency_ms));
-      const maxLatency = Math.max(...aggregates.map((row) => row.avg_latency_ms));
+      const chartRows = methodAggregates;
+
+      if (!chartRows.length) {
+        container.innerHTML = '<div style="padding:22px;color:#9dbde9;font-family:JetBrains Mono, monospace;">No data available for curve.</div>';
+        return;
+      }
+
+      const width = Math.max(container.clientWidth || 900, 360);
+      const height = 360;
+      const padding = { top: 20, right: 24, bottom: 54, left: 72 };
+      const plotW = Math.max(120, width - padding.left - padding.right);
+      const plotH = Math.max(120, height - padding.top - padding.bottom);
+
+      const minLatencyRaw = Math.min(...chartRows.map((row) => row.avg_latency_ms));
+      const maxLatencyRaw = Math.max(...chartRows.map((row) => row.avg_latency_ms));
+      const minQualityRaw = Math.min(...chartRows.map((row) => row.avg_quality_score));
+      const maxQualityRaw = Math.max(...chartRows.map((row) => row.avg_quality_score));
+
+      const latencyPad = Math.max((maxLatencyRaw - minLatencyRaw) * 0.08, 250);
+      const qualityPad = Math.max((maxQualityRaw - minQualityRaw) * 0.12, 0.03);
+
+      const minLatency = Math.max(0, minLatencyRaw - latencyPad);
+      const maxLatency = maxLatencyRaw + latencyPad;
       const latSpan = Math.max(1, maxLatency - minLatency);
 
-      const minQuality = Math.min(...aggregates.map((row) => row.avg_quality_score));
-      const maxQuality = Math.max(...aggregates.map((row) => row.avg_quality_score));
+      let minQuality = Math.max(0, minQualityRaw - qualityPad);
+      let maxQuality = Math.min(1, maxQualityRaw + qualityPad);
+      if (maxQuality - minQuality < 0.05) {
+        const mid = (maxQuality + minQuality) / 2;
+        minQuality = Math.max(0, mid - 0.03);
+        maxQuality = Math.min(1, mid + 0.03);
+      }
       const qualSpan = Math.max(0.01, maxQuality - minQuality);
 
       const x = (lat) => padding.left + ((lat - minLatency) / latSpan) * plotW;
@@ -412,19 +718,56 @@
       bg.setAttribute('y', '0');
       bg.setAttribute('width', `${width}`);
       bg.setAttribute('height', `${height}`);
-      bg.setAttribute('fill', '#fcfef8');
+      bg.setAttribute('fill', '#070f2c');
       svg.appendChild(bg);
 
-      for (let i = 0; i <= 4; i += 1) {
-        const yVal = padding.top + (plotH * i) / 4;
+      const xTicks = 5;
+      const yTicks = 5;
+
+      for (let i = 0; i <= yTicks; i += 1) {
+        const yVal = padding.top + (plotH * i) / yTicks;
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', `${padding.left}`);
         line.setAttribute('x2', `${padding.left + plotW}`);
         line.setAttribute('y1', `${yVal}`);
         line.setAttribute('y2', `${yVal}`);
-        line.setAttribute('stroke', '#dde6cf');
+        line.setAttribute('stroke', '#1e3765');
         line.setAttribute('stroke-width', '1');
         svg.appendChild(line);
+
+        const tickValue = maxQuality - (qualSpan * i) / yTicks;
+        const tickLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        tickLabel.textContent = pct(tickValue);
+        tickLabel.setAttribute('x', `${padding.left - 10}`);
+        tickLabel.setAttribute('y', `${yVal + 4}`);
+        tickLabel.setAttribute('text-anchor', 'end');
+        tickLabel.setAttribute('fill', '#8fb5e2');
+        tickLabel.setAttribute('font-size', '11');
+        tickLabel.setAttribute('font-family', 'JetBrains Mono, monospace');
+        svg.appendChild(tickLabel);
+      }
+
+      for (let i = 0; i <= xTicks; i += 1) {
+        const xVal = padding.left + (plotW * i) / xTicks;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', `${xVal}`);
+        line.setAttribute('x2', `${xVal}`);
+        line.setAttribute('y1', `${padding.top}`);
+        line.setAttribute('y2', `${padding.top + plotH}`);
+        line.setAttribute('stroke', '#16325f');
+        line.setAttribute('stroke-width', '1');
+        svg.appendChild(line);
+
+        const tickValue = minLatency + (latSpan * i) / xTicks;
+        const tickLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        tickLabel.textContent = `${Math.round(tickValue).toLocaleString()}`;
+        tickLabel.setAttribute('x', `${xVal}`);
+        tickLabel.setAttribute('y', `${padding.top + plotH + 16}`);
+        tickLabel.setAttribute('text-anchor', 'middle');
+        tickLabel.setAttribute('fill', '#8fb5e2');
+        tickLabel.setAttribute('font-size', '11');
+        tickLabel.setAttribute('font-family', 'JetBrains Mono, monospace');
+        svg.appendChild(tickLabel);
       }
 
       const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -432,7 +775,7 @@
       xAxis.setAttribute('x2', `${padding.left + plotW}`);
       xAxis.setAttribute('y1', `${padding.top + plotH}`);
       xAxis.setAttribute('y2', `${padding.top + plotH}`);
-      xAxis.setAttribute('stroke', '#8ea58a');
+      xAxis.setAttribute('stroke', '#4de8ff');
       xAxis.setAttribute('stroke-width', '1.4');
       svg.appendChild(xAxis);
 
@@ -441,63 +784,75 @@
       yAxis.setAttribute('x2', `${padding.left}`);
       yAxis.setAttribute('y1', `${padding.top}`);
       yAxis.setAttribute('y2', `${padding.top + plotH}`);
-      yAxis.setAttribute('stroke', '#8ea58a');
+      yAxis.setAttribute('stroke', '#4de8ff');
       yAxis.setAttribute('stroke-width', '1.4');
       svg.appendChild(yAxis);
 
       const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       xLabel.textContent = 'Average Latency (ms)';
       xLabel.setAttribute('x', `${padding.left + plotW / 2}`);
-      xLabel.setAttribute('y', `${height - 10}`);
+      xLabel.setAttribute('y', `${height - 8}`);
       xLabel.setAttribute('text-anchor', 'middle');
-      xLabel.setAttribute('fill', '#41583d');
+      xLabel.setAttribute('fill', '#90d8ff');
       xLabel.setAttribute('font-size', '12');
-      xLabel.setAttribute('font-family', 'Azeret Mono, monospace');
+      xLabel.setAttribute('font-family', 'JetBrains Mono, monospace');
       svg.appendChild(xLabel);
 
       const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       yLabel.textContent = 'Composite Quality Score';
-      yLabel.setAttribute('x', '16');
+      yLabel.setAttribute('x', '18');
       yLabel.setAttribute('y', `${padding.top + plotH / 2}`);
       yLabel.setAttribute('text-anchor', 'middle');
-      yLabel.setAttribute('transform', `rotate(-90 16 ${padding.top + plotH / 2})`);
-      yLabel.setAttribute('fill', '#41583d');
+      yLabel.setAttribute('transform', `rotate(-90 18 ${padding.top + plotH / 2})`);
+      yLabel.setAttribute('fill', '#90d8ff');
       yLabel.setAttribute('font-size', '12');
-      yLabel.setAttribute('font-family', 'Azeret Mono, monospace');
+      yLabel.setAttribute('font-family', 'JetBrains Mono, monospace');
       svg.appendChild(yLabel);
 
-      const frontier = paretoFrontier(aggregates);
+      const frontier = paretoFrontier(chartRows);
       if (frontier.length > 1) {
         const points = frontier.map((row) => `${x(row.avg_latency_ms)},${y(row.avg_quality_score)}`).join(' ');
         const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         polyline.setAttribute('points', points);
         polyline.setAttribute('fill', 'none');
-        polyline.setAttribute('stroke', '#20736f');
-        polyline.setAttribute('stroke-width', '2.3');
+        polyline.setAttribute('stroke', '#71ffd8');
+        polyline.setAttribute('stroke-width', '2.5');
         svg.appendChild(polyline);
       }
 
-      for (const row of aggregates) {
+      const showAllLabels = chartRows.length <= 8;
+      const topQuality = [...chartRows].sort((a, b) => b.avg_quality_score - a.avg_quality_score)[0];
+      const fastest = [...chartRows].sort((a, b) => a.avg_latency_ms - b.avg_latency_ms)[0];
+      const labelTargets = new Set(showAllLabels ? chartRows.map((row) => row.strategy_name) : [topQuality?.strategy_name, fastest?.strategy_name].filter(Boolean));
+
+      for (const row of chartRows) {
         const cx = x(row.avg_latency_ms);
         const cy = y(row.avg_quality_score);
+        const isTarget = labelTargets.has(row.strategy_name);
 
         const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         point.setAttribute('cx', `${cx}`);
         point.setAttribute('cy', `${cy}`);
-        point.setAttribute('r', '5.5');
-        point.setAttribute('fill', '#d95d39');
-        point.setAttribute('stroke', '#7a2d19');
+        point.setAttribute('r', isTarget ? '6.5' : '5');
+        point.setAttribute('fill', isTarget ? '#71ffd8' : '#a67dff');
+        point.setAttribute('stroke', '#efe3ff');
         point.setAttribute('stroke-width', '1');
+
+        const tooltip = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        tooltip.textContent = `${row.strategy_name} | avg quality ${pct(row.avg_quality_score)} | avg latency ${ms(row.avg_latency_ms)} | avg cost ${usd(row.avg_token_cost_usd)} | ${row.source_count} datasets`;
+        point.appendChild(tooltip);
         svg.appendChild(point);
 
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.textContent = row.strategy_name;
-        label.setAttribute('x', `${cx + 8}`);
-        label.setAttribute('y', `${cy - 8}`);
-        label.setAttribute('fill', '#1f3d1f');
-        label.setAttribute('font-size', '11');
-        label.setAttribute('font-family', 'Azeret Mono, monospace');
-        svg.appendChild(label);
+        if (isTarget) {
+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          label.textContent = row.method || row.strategy_name;
+          label.setAttribute('x', `${cx + 9}`);
+          label.setAttribute('y', `${cy - 9}`);
+          label.setAttribute('fill', '#d8f9ff');
+          label.setAttribute('font-size', '11');
+          label.setAttribute('font-family', 'JetBrains Mono, monospace');
+          svg.appendChild(label);
+        }
       }
 
       container.innerHTML = '';
@@ -516,7 +871,7 @@
             <div class="bar-row">
               <div class="bar-label">${row.strategy_name}</div>
               <div class="bar-track"><div class="bar-fill" style="width:${width.toFixed(1)}%"></div></div>
-              <div class="bar-value">Total ${usd(row.total_token_cost_usd)} | ${row.total_tokens.toLocaleString()} toks</div>
+              <div class="bar-value">Total ${usd(row.total_token_cost_usd)}</div>
             </div>
           `;
         })
@@ -525,6 +880,7 @@
 
     renderMeta();
     renderStats();
+    setupLeaderboardSorting();
     renderLeaderboard();
     drawScatter();
     renderCostBars();
