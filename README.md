@@ -33,6 +33,10 @@ Dataset details and source links are documented in `docs/DATASETS.md`.
 
 - Method sweep metrics report: [docs/reports/method_sweep_metrics.md](docs/reports/method_sweep_metrics.md)
 
+## Web Report Preview
+
+![Dashboard Reporting Preview](.github/assets/web-dashboard.png)
+
 ## Quickstart
 
 ### 1. Environment
