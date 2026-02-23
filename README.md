@@ -6,7 +6,7 @@ Production-oriented RAG evaluation stack for retrieval quality, faithfulness, la
 
 ## Dashboard Preview
 
-![RAG Dashboard Preview](.github/assets/rag-dashboard-preview.png)
+![RAG Dashboard Preview](.github/assets/rag-dashboard-preview.jpg)
 
 ## What this project includes
 
@@ -35,7 +35,7 @@ Dataset details and source links are documented in `docs/DATASETS.md`.
 
 ## Web Report Preview
 
-![Dashboard Reporting Preview](.github/assets/web-dashboard.png)
+![Dashboard Reporting Preview](.github/assets/web-dashboard.jpg)
 
 ## Quickstart
 
@@ -112,7 +112,7 @@ Optional frontend API config:
 
 ## Workflow Builder
 
-![RAG Workflow Preview](.github/assets/workflow-builder.png)
+![RAG Workflow Preview](.github/assets/workflow-builder.jpg)
 
 
 ## Docker
